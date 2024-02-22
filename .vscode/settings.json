@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "hitledtimer.h": "c",
+        "lockouttimer.h": "c"
+    }
+}

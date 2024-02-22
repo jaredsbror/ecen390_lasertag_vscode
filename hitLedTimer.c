@@ -12,7 +12,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include "hitLedTimer.h"
 
-#define DEBUG_HIT_LED_TIMER true
+#define DEBUG_HIT_LED_TIMER true  // If true, debug messages enabled
 
 // The hitLedTimer is active for 1/2 second once it is started.
 // While active, it turns on the LED connected to MIO pin 11
@@ -31,6 +31,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define HHHH_ST_MSG "\n"
 #define IIII_ST_MSG "\n"
 #define JJJJ_ST_MSG "\n"
+#define HIT_LED_TIMER_UNKNOWN_ST_MSG "ERROR: Unknown state in Hit Led Timer\n"
 
 
 // State machine states
@@ -93,6 +94,7 @@ static void debugStatePrint() {
             break;
         default:
             // Error message here
+            printf(HIT_LED_TIMER_UNKNOWN_ST_MSG);
             break;
      }
   }
@@ -133,6 +135,7 @@ void hitLedTimer_tick() {
             break;
         default:
             // Error message here
+            printf(HIT_LED_TIMER_UNKNOWN_ST_MSG);
             break;
     }
 
@@ -160,6 +163,7 @@ void hitLedTimer_tick() {
             break;
         default:
             // Error message here
+            printf(HIT_LED_TIMER_UNKNOWN_ST_MSG);
             break;
     }
 };
