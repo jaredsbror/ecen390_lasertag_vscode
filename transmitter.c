@@ -14,6 +14,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // The transmitter state machine generates a square wave output at the chosen
 // frequency as set by transmitter_setFrequencyNumber(). The step counts for the
 // frequencies are provided in filter.h
+// #define TRANSMITTER_OUTPUT_PIN 13     // JF1 (pg. 25 of ZYBO reference manual).
+// #define TRANSMITTER_PULSE_WIDTH 20000 // Based on a system tick-rate of 100 kHz.
 
 // Standard init function.
 void transmitter_init() {
