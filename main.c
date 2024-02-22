@@ -22,7 +22,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <assert.h>
 #include <stdio.h>
 
-//#include "bufferTest.h"
+#include "bufferTest.h"
 #include "buttons.h"
 #include "detector.h"
 #include "display.h"
@@ -73,10 +73,10 @@ int main() {
   interrupts_enableArmInts(); // now the ARM processor can see interrupts.
 
   transmitter_runTestNoncontinuous();
-  transmitter_runTestContinuous();
-  trigger_runTest();
-  hitLedTimer_runTest();
-  lockoutTimer_runTest();
+  //transmitter_runTestContinuous();
+  //trigger_runTest();
+  //hitLedTimer_runTest();
+  //lockoutTimer_runTest();
 #endif
 
 #ifdef RUNNING_MODE_M3_T3

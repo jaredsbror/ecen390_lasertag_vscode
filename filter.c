@@ -503,3 +503,8 @@ queue_t *filter_getZQueue(uint16_t filterNumber) {
 queue_t *filter_getIirOutputQueue(uint16_t filterNumber) {
   return &outputQueues[filterNumber];
 };
+
+// Returns the frequency tick count given a frequency number
+const uint16_t filter_getFrequencyTick(uint16_t frequencyNumber) {
+  return filter_frequencyTickTable[frequencyNumber];
+};
