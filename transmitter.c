@@ -17,7 +17,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "switches.h"
 #include "utils.h"
 
-#define DEBUG_TRANSMITTER false  // If true, debug messages enabled
+#define DEBUG_TRANSMITTER false         // If true, debug messages enabled (slower)
+#define DEBUG_TRANSMITTER_TICKS false   // If true, tick count messages enabled (very slow) 
 
 // The transmitter state machine generates a square wave output at the chosen
 // frequency as set by transmitter_setFrequencyNumber(). The step counts for the
@@ -36,11 +37,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define DIVIDE_BY_TWO 2
 
-volatile static bool triggerPulled;
-volatile static uint16_t frequency;
-volatile static uint16_t frequencyTicks;
-volatile static uint16_t newFrequencyTicks;
-volatile static bool continuousMode;
+// Global variables
+volatile static uint16_t frequency;     // Player number (index from o to 9 instead of 1 to 10)
+volatile static uint16_t newFrequency;  // Updated player number to be applied next cycle
+volatile static uint16_t frequencyTicks;    // Number of ticks representing player frequency
+volatile static uint16_t newFrequencyTicks; // Updated number of ticks for next cycle
+volatile static bool triggerPulled;     // Gun trigger pulled
+volatile static bool continuousMode;    // State machine should transmit continuously
+static bool on;     // Whether the state machine is active or not
  
 // State machine states
 enum transmitter_st_t {
@@ -69,15 +73,21 @@ static void debugStatePrint() {
     previousState = currentState;     // keep track of the last state that you were in.
     switch(currentState) {            // This prints messages based upon the state that you were in.
         case INIT_ST:
+            printf("\n");
             printf(INIT_ST_MSG);
             break;
         case INACTIVE_ST:
+            printf("\n");
             printf(INACTIVE_ST_MSG);
             break;
         case ON_ST:
+            printf("\n");
+            printf("Player %d with half ticks %d --> ", frequency + 1, frequencyTicks);
             printf(ON_ST_MSG);
             break;
         case OFF_ST:
+            printf("\n");
+            printf("Player %d with half ticks %d --> ", frequency + 1, frequencyTicks);
             printf(OFF_ST_MSG);
             break;
         default:
@@ -88,12 +98,13 @@ static void debugStatePrint() {
   }
 }
 
-// 
-void transmitter_set_jf1_to_one() {
+// Set transmitter pin to 1
+static void transmitter_set_jf1_to_one() {
   mio_writePin(TRANSMITTER_OUTPUT_PIN, TRANSMITTER_HIGH_VALUE); // Write a '1' to JF-1.
 }
 
-void transmitter_set_jf1_to_zero() {
+// Set transmitter pin to 0
+static void transmitter_set_jf1_to_zero() {
   mio_writePin(TRANSMITTER_OUTPUT_PIN, TRANSMITTER_LOW_VALUE); // Write a '0' to JF-1.
 }
 
@@ -106,19 +117,27 @@ void transmitter_init() {
     // Set transmitter pint
     mio_init(false);  // false disables any debug printing if there is a system failure during init.
     mio_setPinAsOutput(TRANSMITTER_OUTPUT_PIN);  // Configure the signal direction of the pin to be an output.
-    triggerPulled = false;
+    
+    // Integer default values
     frequency = 0;
+    newFrequency = 0;
     frequencyTicks = 0;
+    newFrequencyTicks = 0;
+
+    // Boolean default values
+    triggerPulled = false;
     continuousMode = false;
+    on = false;
 
     // Transition
     currentState = INIT_ST;
+    printf("initialized\n");
 };
 
 // Standard tick function.
 void transmitter_tick() {
     // Transmitter tick count
-    static uint32_t transmitterTick = 0;
+    static uint32_t transmitterTick;
     
     // Optional debug messages
     if (DEBUG_TRANSMITTER) debugStatePrint();
@@ -126,48 +145,61 @@ void transmitter_tick() {
      // Perform state update
     switch(currentState) {
         case INIT_ST:
-            // Transition to default state
-            currentState = INACTIVE_ST;  
+            currentState = INACTIVE_ST;  // Transition to default state
             break;
+
         case INACTIVE_ST:
             // If trigger is pulled or continuous mode is active, turn on pulsing for 200 ms
             if(triggerPulled || continuousMode){
-                // 
-                transmitterTick = 0;
                 currentState = ON_ST;
+                // Reset variables for next 200ms pulse
+                on = true;
+                triggerPulled = false;
+                transmitterTick = 1;
+                // Update frequency and frequencyTicks values for next pulse
+                frequency = newFrequency;
                 frequencyTicks = newFrequencyTicks;
                 //Set JF1 pin to ON when transistion to ON_ST
                 transmitter_set_jf1_to_one();
-            } else    // Default transition
-                currentState = currentState;
-
+            } else{
+                // Set on to false
+                on = false;
+            }
             break;
+
         case ON_ST:
-            // 
+            // Optional debug print
+            if (DEBUG_TRANSMITTER) printf("1");
+            // Check whether or not to terminate the pulse output
             if (transmitterTick > TRANSMITTER_PULSE_WIDTH) {
-                transmitterTick = 0;
                 currentState = INACTIVE_ST;
-            // 
-            } else if(transmitterTick % frequencyTicks == 0) {
+                transmitterTick = 0;
+            // Transition to off state depending on frequency
+            } else if((transmitterTick % frequencyTicks) == 0) {
                 currentState = OFF_ST;
+                // Optional debug print
+                if (DEBUG_TRANSMITTER) printf("\n");
                 //Set JF1 pin to OFF when transistion to OFF_ST
                 transmitter_set_jf1_to_zero();
-            } else    // Default transition    
-                currentState = currentState;
-
+            }
             break;
+
         case OFF_ST:
-            // 
+
+            // Optional debug print
+            if (DEBUG_TRANSMITTER) printf("0");
+            // Check whether or not to terminate the pulse output
             if (transmitterTick > TRANSMITTER_PULSE_WIDTH) {
-                transmitterTick = 0;
                 currentState = INACTIVE_ST;
-            // 
-            } else if(transmitterTick % frequencyTicks == 0) {
+                // Optional debug print
+                if (DEBUG_TRANSMITTER) printf("\n");
+                transmitterTick = 0;
+            // Transition to on state depending on frequency
+            } else if((transmitterTick % frequencyTicks) == 0) {
                 currentState = ON_ST;
                 //Set JF1 pin to ON when transistion to ON_ST
                 transmitter_set_jf1_to_one();
-            } else    // Default transition
-                currentState = currentState;
+            }
     
             break;
         default:
@@ -182,13 +214,17 @@ void transmitter_tick() {
             break;
         case INACTIVE_ST:
             break;
-        case ON_ST:    
+        case ON_ST:
+            // Optional debug statement
+            if (DEBUG_TRANSMITTER_TICKS) printf("%d -> ",transmitterTick);
             // Increment tick count
-            frequencyTicks++;
+            transmitterTick++;
+            // Optional debug statement
+            if (DEBUG_TRANSMITTER_TICKS) printf("%d\n",transmitterTick);
             break;
-        case OFF_ST:    
+        case OFF_ST:
             // Increment tick count
-            frequencyTicks++;
+            transmitterTick++;
             break;
         default:
             // Error message here
@@ -204,7 +240,7 @@ void transmitter_run() {
 
 // Returns true if the transmitter is still running.
 bool transmitter_running() {
-    return triggerPulled == true;
+    return on;
 };
 
 // Sets the frequency number. If this function is called while the
@@ -215,7 +251,7 @@ void transmitter_setFrequencyNumber(uint16_t frequencyNumber) {
     if (currentState == INACTIVE_ST) {
         // Divide by 2 to get half cycles
         newFrequencyTicks = filter_getFrequencyTick(frequencyNumber) / DIVIDE_BY_TWO;
-        frequency = frequencyNumber;
+        newFrequency = frequencyNumber;
     }
 };
 
@@ -247,8 +283,8 @@ void transmitter_setContinuousMode(bool continuousModeFlag) {
 // Prints out one line of 1s and 0s that represent one period of the clock signal, in terms of ticks.
 void transmitter_runTest() {
     printf("starting transmitter_runTest()\n");
-    transmitter_init();                                     // init the transmitter.
-    while (!(buttons_read() & BUTTONS_BTN3_MASK)) {         // Run continuously until BTN3 is pressed.
+    transmitter_init();                                // init the transmitter.
+    while (!(buttons_read() & BUTTONS_BTN3_MASK)) {        // Run continuously until BTN3 is pressed.
         uint16_t switchValue = switches_read() % FILTER_FREQUENCY_COUNT;  // Compute a safe number from the switches.
         transmitter_setFrequencyNumber(switchValue);          // set the frequency number based upon switch value.
         transmitter_run();                                    // Start the transmitter.
