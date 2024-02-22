@@ -17,7 +17,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // The lockoutTimer is active for 1/2 second once it is started.
 // It is used to lock-out the detector once a hit has been detected.
 // This ensures that only one hit is detected per 1/2-second interval.
-// #define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
+
+#define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"

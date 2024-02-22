@@ -23,7 +23,7 @@ void isr_init() {
 
     // Call state machine initializations
     //hitLedTimer_init();
-    //lockoutTimer_init();
+    lockoutTimer_init();
     transmitter_init();
     //trigger_init();
 };
@@ -33,7 +33,7 @@ void isr_function() {
 
     // Call tick functions
     //hitLedTimer_tick();
-    //lockoutTimer_tick();
+    lockoutTimer_tick();
     transmitter_tick();
     //trigger_tick();
 };
