@@ -11,6 +11,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "lockoutTimer.h"
 #include "transmitter.h"
 #include "trigger.h"
+#include "isr.h"
 
 // The interrupt service routine (ISR) is implemented here.
 // Add function calls for state machine tick functions and
