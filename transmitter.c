@@ -103,6 +103,11 @@ static void debugStatePrint() {
 
 // Standard init function.
 void transmitter_init() {
+    currentState = INIT_ST;
+};
+
+// Standard tick function.
+void transmitter_tick() {
     
     // Optional debug messages
     if (DEBUG_TRANSMITTER) debugStatePrint();
@@ -162,11 +167,6 @@ void transmitter_init() {
             printf(TRANSMITTER_UNKNOWN_ST_MSG);
             break;
     }
-};
-
-// Standard tick function.
-void transmitter_tick() {
-    
 };
 
 // Activate the transmitter.
