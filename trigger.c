@@ -108,7 +108,6 @@ static void debugStatePrint() {
 // (see discussion in lab web pages).
 void trigger_init() {
     currentState = INIT_ST;
-
 };
 
 // Standard tick function.
