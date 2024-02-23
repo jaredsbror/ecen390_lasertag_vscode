@@ -73,9 +73,9 @@ int main() {
   interrupts_enableArmInts(); // now the ARM processor can see interrupts.
 
   //transmitter_runTestNoncontinuous();
-  transmitter_runTestContinuous();
+  //transmitter_runTestContinuous();
   //trigger_runTest();
-  //hitLedTimer_runTest();
+  hitLedTimer_runTest();
   //lockoutTimer_runTest();
 #endif
 

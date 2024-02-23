@@ -3,10 +3,10 @@ main.c
 queue.c
 filter.c
 isr.c
-# trigger.c
+trigger.c
 transmitter.c
-# hitLedTimer.c
-# lockoutTimer.c
+hitLedTimer.c
+lockoutTimer.c
 # buffer.c
 # detector.c
 # game.c

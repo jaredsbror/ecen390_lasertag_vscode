@@ -22,29 +22,20 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"
-#define BBBB_ST_MSG "\n"
-#define CCCC_ST_MSG "\n"
-#define DDDD_ST_MSG "\n"
-#define EEEE_ST_MSG "\n"
-#define FFFF_ST_MSG "\n"
-#define GGGG_ST_MSG "\n"
-#define HHHH_ST_MSG "\n"
-#define IIII_ST_MSG "\n"
-#define JJJJ_ST_MSG "\n"
+#define ACTIVE_ST_MSG "active state\n"
+#define INACTIVE_ST_MSG "inactive state\n"
 #define LOCKOUT_TIMER_UNKNOWN_ST_MSG "ERROR: Unknown state in Lockout Timer\n"
+
+// Global variables
+static uint32_t tickCount;  // Tick counter
+static bool active;     // Timer is active
+static bool startTimer;     // Start the lockout timer
 
 // State machine states
 enum lockoutTimer_st_t {
     INIT_ST,
-    BBBB_ST,
-    CCCC_ST,
-    DDDD_ST,
-    EEEE_ST,
-    FFFF_ST,
-    GGGG_ST,
-    HHHH_ST,
-    IIII_ST,
-    JJJJ_ST
+    INACTIVE_ST,
+    ACTIVE_ST
 };
 static enum lockoutTimer_st_t currentState;
 
@@ -64,32 +55,11 @@ static void debugStatePrint() {
         case INIT_ST:
             printf(INIT_ST_MSG);
             break;
-        case BBBB_ST:
-            printf(BBBB_ST_MSG);
+        case ACTIVE_ST:
+            printf(ACTIVE_ST_MSG);
             break;
-        case CCCC_ST:
-            printf(CCCC_ST_MSG);
-            break;
-        case DDDD_ST:
-            printf(DDDD_ST_MSG);
-            break;
-        case EEEE_ST:
-            printf(EEEE_ST_MSG);
-            break;
-        case FFFF_ST:
-            printf(FFFF_ST_MSG);
-            break;
-        case GGGG_ST:
-            printf(GGGG_ST_MSG);
-            break;
-        case HHHH_ST:
-            printf(HHHH_ST_MSG);
-            break;
-        case IIII_ST:
-            printf(IIII_ST_MSG);
-            break;
-        case JJJJ_ST:
-            printf(JJJJ_ST_MSG);
+        case INACTIVE_ST:
+            printf(INACTIVE_ST_MSG);
             break;
         default:
             // Error message here
@@ -103,6 +73,11 @@ static void debugStatePrint() {
 // Perform any necessary inits for the lockout timer.
 void lockoutTimer_init() {
     currentState = INIT_ST;
+
+    // Default integer values
+    tickCount = 0;
+    // Default boolean values
+    active = false;
 };
 
 // Standard tick function.
@@ -113,26 +88,34 @@ void lockoutTimer_tick() {
 
      // Perform state update
     switch(currentState) {
+
         case INIT_ST:
+            // Immediately transition to inactive state
+            currentState = INACTIVE_ST;
+            // Default boolean values
+            active = false;
             break;
-        case BBBB_ST:
+
+        case INACTIVE_ST:
+            // If timer is to be started, transition to active state
+            if (startTimer) {
+                currentState = ACTIVE_ST;
+                // Reset tickCount to 0 and set active to true
+                tickCount = 0;
+                active = true;
+            }
             break;
-        case CCCC_ST:
+
+        case ACTIVE_ST:
+            // If lockout timer is over, return to inactive state
+            if (tickCount > LOCKOUT_TIMER_EXPIRE_VALUE) {
+                currentState = INACTIVE_ST;
+                //Reset tickCount to 0 and set active to false
+                tickCount = 0;
+                active = false;
+            }
             break;
-        case DDDD_ST:
-            break;
-        case EEEE_ST:
-            break;
-        case FFFF_ST:
-            break;
-        case GGGG_ST:
-            break;
-        case HHHH_ST:
-            break;
-        case IIII_ST:
-            break;
-        case JJJJ_ST:
-            break;
+
         default:
             // Error message here
             printf(LOCKOUT_TIMER_UNKNOWN_ST_MSG);
@@ -143,23 +126,11 @@ void lockoutTimer_tick() {
     switch(currentState) {
         case INIT_ST:
             break;
-        case BBBB_ST:
+        case INACTIVE_ST:
             break;
-        case CCCC_ST:
-            break;
-        case DDDD_ST:
-            break;
-        case EEEE_ST:
-            break;
-        case FFFF_ST:
-            break;
-        case GGGG_ST:
-            break;
-        case HHHH_ST:
-            break;
-        case IIII_ST:
-            break;
-        case JJJJ_ST:
+        case ACTIVE_ST:
+            // Increment tick counter
+            tickCount++;
             break;
         default:
             // Error message here
@@ -170,12 +141,12 @@ void lockoutTimer_tick() {
 
 // Calling this starts the timer.
 void lockoutTimer_start() {
-
+    startTimer = true;
 };
 
 // Returns true if the timer is running.
 bool lockoutTimer_running() {
-
+    return active;
 };
 
 // Test function assumes interrupts have been completely enabled and
@@ -185,5 +156,14 @@ bool lockoutTimer_running() {
 // This test uses the interval timer to determine correct delay for
 // the interval timer.
 bool lockoutTimer_runTest() {
+    // Start an interval timer
+    
+    // Invoke lockoutTimer_start()
+
+    // Wait while lockoutTimer_running() is true (another while-loop)
+
+    // Once lockoutTimer_running() is false, stop the interval timer
+
+    // Print out the time duration from the interval timer
 
 };
