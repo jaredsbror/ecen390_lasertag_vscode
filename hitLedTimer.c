@@ -14,6 +14,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "leds.h"
 #include "mio.h"
 #include "utils.h"
+#include "buttons.h"
 
 #define DEBUG_HIT_LED_TIMER true  // If true, debug messages enabled
 
@@ -21,14 +22,17 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // While active, it turns on the LED connected to MIO pin 11
 // and also LED LD0 on the ZYBO board.
 
-#define HIT_LED_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
+#define HIT_LED_TIMER_EXPIRE_VALUE 50000 //correct 50000 // Defined in terms of 100 kHz ticks.
+#define HIT_LED_TIMER_TEST_DELAY_VALUE 300 // Ms delay between tests
 #define HIT_LED_TIMER_OUTPUT_PIN 11      // JF-3
-#define HIT_LED_TIMER_HIGH 1
-#define HIT_LED_TIMER_LOW 0
+#define HIT_LED_TIMER_LED_JF3_HIGH 1
+#define HIT_LED_TIMER_LED_JF3_LOW 0
+#define HIT_LED_TIMER_LED_LD0_HIGH 0x1
+#define HIT_LED_TIMER_LED_LD0_LOW 0x0
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"
-#define NO_HIT_DETECTED_ST_MSG "inactive state\n"
+#define NO_HIT_DETECTED_ST_MSG "no hit detected state\n"
 #define HIT_DETECTED_ST_MSG "hit detected state\n"
 #define HIT_LED_TIMER_UNKNOWN_ST_MSG "ERROR: Unknown state in Hit Led Timer\n"
 
@@ -42,9 +46,8 @@ static enum hitLedTimer_st_t currentState;
 
 // Global variables
 static uint32_t tickCounter;    // Tick counter
-static bool hitDetected;    // A hit was detected
-static bool enabled;    // Timer is enabled
-static bool active;     // Timer is active
+static bool hit;    // A hit was detected
+static bool timer_enable;    // Timer is enabled
 
 /////////////////////
 // HELPER FUNCTIONS /
@@ -93,13 +96,16 @@ void hitLedTimer_init() {
     mio_init(false);  // false disables any debug printing if there is a system failure during init.
     mio_setPinAsOutput(HIT_LED_TIMER_OUTPUT_PIN);  // Configure the signal direction of the pin to be an output.
 
+    // Intialize leds and buttons
+    leds_init(true);
+    buttons_init();
+
     // Default int values
     tickCounter = 0;
     
     // Default boolean values
-    hitDetected =  false;
-    enabled = false;
-    active = false;
+    hit =  false;
+    timer_enable = false;
 };
 
 // Standard tick function.
@@ -115,27 +121,25 @@ void hitLedTimer_tick() {
             // Default transition to inactive state
             currentState = NO_HIT_DETECTED_ST;
             hitLedTimer_turnLedOff();
-            tickCounter = 0;
             break;
 
         case NO_HIT_DETECTED_ST:
             // If a hit is detected and timer is enabled, move to hit_detected state
-            if (hitDetected && enabled) 
+            if (hit && timer_enable) {
                 currentState = HIT_DETECTED_ST;
-                // 
+                // Set relevant variables
                 tickCounter = 0;
-                hitDetected = false;
-                active = true;
                 hitLedTimer_turnLedOn();
+            }
             break;
 
         case HIT_DETECTED_ST:
             // If the timer time has expired, transition back to inactive state
-            printf("%d\n",tickCounter);
-            if (tickCounter > HIT_LED_TIMER_EXPIRE_VALUE) {
+            if (tickCounter >= HIT_LED_TIMER_EXPIRE_VALUE) {
                 currentState = NO_HIT_DETECTED_ST;
-                // Set active to false
-                active = false;
+                // Reset relevant variables
+                hit = false; //
+                tickCounter = 0;
                 hitLedTimer_turnLedOff();
             }
             break;
@@ -161,49 +165,71 @@ void hitLedTimer_tick() {
             printf(HIT_LED_TIMER_UNKNOWN_ST_MSG);
             break;
     }
+    
 };
 
 // Calling this starts the timer.
 void hitLedTimer_start() {
-    hitDetected = true;
+    hit = true;
 };
 
 // Returns true if the timer is currently running.
 bool hitLedTimer_running() {
-    return active;
+    return (currentState == HIT_DETECTED_ST)||(hit);
 };
 
 // Turns the gun's hit-LED on.
 void hitLedTimer_turnLedOn() {
-    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_HIGH); // Write a '1' to JF-3.
+    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_HIGH); // Write a '1' to JF-3.
+    leds_write(HIT_LED_TIMER_LED_LD0_HIGH);
 };
 
 // Turns the gun's hit-LED off.
 void hitLedTimer_turnLedOff() {
-    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LOW); // Write a '0' to JF-3.
+    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_LOW); // Write a '0' to JF-3.
+    leds_write(HIT_LED_TIMER_LED_LD0_LOW);
 };
 
 // Disables the hitLedTimer.
 void hitLedTimer_disable() {
-    enabled = false;
+    timer_enable = false;
 };
 
 // Enables the hitLedTimer.
 void hitLedTimer_enable() {
-    enabled = true;
+    timer_enable = true;
 };
 
 // Runs a visual test of the hit LED until BTN3 is pressed.
 // The test continuously blinks the hit-led on and off.
 // Depends on the interrupt handler to call tick function.
 void hitLedTimer_runTest() {
-   hitLedTimer_init();
-   //
-   hitLedTimer_enable();
-   hitLedTimer_start();
-   hitLedTimer_tick();
-   // 
-   while (hitLedTimer_running()) {
-        hitLedTimer_tick();
+    // Initialize the machine
+    hitLedTimer_init();
+    hitLedTimer_enable(); //sets enable to true
+    hitLedTimer_start(); //sets hit to true
+    // Infinitely test the half second timer
+    while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
+        
+        while(hitLedTimer_running()){
+            
+        };
+
+        utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
+        hitLedTimer_start();
+
+        // Reactivate pulse
+        // printf(" hit: %d\n", hit);
+        // If active is false, restart the machine
+         //Checks if active is false
+        // {
+        //     hitLedTimer_start();  //sets hit to true
+        //     // Delay rerun of test
+        //     printf("I delay\n");
+        //     utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
+            
+        // }
+        // hitLedTimer_tick(); //ticks the function, will set hit to false eventually, and active to false
+        
    }
 };

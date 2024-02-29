@@ -23,9 +23,9 @@ void isr_init() {
 
     // Call state machine initializations
     hitLedTimer_init();
-    //lockoutTimer_init();
-    //transmitter_init();
-    //trigger_init();
+    lockoutTimer_init();
+    transmitter_init();
+    trigger_init();
 };
 
 // This function is invoked by the timer interrupt at 100 kHz.
@@ -33,8 +33,8 @@ void isr_function() {
 
     // Call tick functions
     hitLedTimer_tick();
-    //lockoutTimer_tick();
-    //transmitter_tick();
-    //trigger_tick();
+    // lockoutTimer_tick();
+    // transmitter_tick();
+    // trigger_tick();
 };
 
