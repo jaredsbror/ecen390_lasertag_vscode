@@ -140,7 +140,7 @@ void trigger_init() {
     pressConfirmed = false;
     releaseConfirmed = false;
 
-    printf("I AM INITED\n");
+    // printf("I AM INITED\n");
 };
 
 // Standard tick function.
@@ -273,14 +273,12 @@ void trigger_runTest() {
     // Initialize the machine
     trigger_init();
     trigger_enable(); //sets enable to true
-    // Infinitely test the half second timer
+    // Infinitely test the trigger
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
         //
-        while(hitLedTimer_running()){
+        while(currentState == ){
 
         };
-
-        utils_msDelay(TRIGGER_TEST_TICK_PERIOD_IN_MS);
     
     };
 

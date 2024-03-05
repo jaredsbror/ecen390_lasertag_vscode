@@ -131,7 +131,7 @@ void transmitter_init() {
 
     // Transition
     currentState = INIT_ST;
-    printf("initialized\n");
+    // printf("initialized\n");
 };
 
 // Standard tick function.

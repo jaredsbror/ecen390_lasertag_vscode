@@ -125,6 +125,7 @@ void hitLedTimer_tick() {
 
         case NO_HIT_DETECTED_ST:
             // If a hit is detected and timer is enabled, move to hit_detected state
+            // printf("Hit: %d, Enable: %d, Running: %d\n", hit, timer_enable, hitLedTimer_running());
             if (hit && timer_enable) {
                 currentState = HIT_DETECTED_ST;
                 // Set relevant variables
@@ -171,11 +172,12 @@ void hitLedTimer_tick() {
 // Calling this starts the timer.
 void hitLedTimer_start() {
     hit = true;
+    // printf("Resuscitate LED's\n");
 };
 
 // Returns true if the timer is currently running.
 bool hitLedTimer_running() {
-    return (currentState == HIT_DETECTED_ST)||(hit);
+    return ((currentState == HIT_DETECTED_ST) || hit);
 };
 
 // Turns the gun's hit-LED on.
@@ -206,16 +208,18 @@ void hitLedTimer_enable() {
 void hitLedTimer_runTest() {
     // Initialize the machine
     hitLedTimer_init();
-    hitLedTimer_enable(); //sets enable to true
-    hitLedTimer_start(); //sets hit to true
+    hitLedTimer_enable(); // Sets enable to true
+    hitLedTimer_start(); // Sets hit to true
+    // printf("Testing\n");
     // Infinitely test the half second timer
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
         //
         while(hitLedTimer_running()){
-            
+        
         };
 
         utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
         hitLedTimer_start();
+        // printf("%d\n",tickCounter);
    }
 };

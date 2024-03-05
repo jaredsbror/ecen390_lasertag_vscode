@@ -10,6 +10,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "intervalTimer.h"
 #include "lockoutTimer.h"
 
 #define DEBUG_LOCKOUT_TIMER true  // If true, debug messages enabled
@@ -146,7 +147,7 @@ void lockoutTimer_start() {
 
 // Returns true if the timer is running.
 bool lockoutTimer_running() {
-    return active;
+    return (currentState == ACTIVE_ST) || active;
 };
 
 // Test function assumes interrupts have been completely enabled and
@@ -157,13 +158,22 @@ bool lockoutTimer_running() {
 // the interval timer.
 bool lockoutTimer_runTest() {
     // Start an interval timer
+    intervalTimer_init(1);
+    intervalTimer_reset(1);
+    intervalTimer_start(1);
     
     // Invoke lockoutTimer_start()
+    lockoutTimer_start();
 
     // Wait while lockoutTimer_running() is true (another while-loop)
+    while (lockoutTimer_running()) {
+
+    }
 
     // Once lockoutTimer_running() is false, stop the interval timer
+    intervalTimer_stop(1);
 
     // Print out the time duration from the interval timer
+    printf("Interval Timer Duration (s): %lf\n", intervalTimer_getTotalDurationInSeconds(1));
 
 };
