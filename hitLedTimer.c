@@ -24,6 +24,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define HIT_LED_TIMER_EXPIRE_VALUE 50000 //correct 50000 // Defined in terms of 100 kHz ticks.
 #define HIT_LED_TIMER_TEST_DELAY_VALUE 300 // Ms delay between tests
+#define HIT_LED_TIMER_MILLISECOND_DELAY 1 // Slow down loop a little bit
 #define HIT_LED_TIMER_OUTPUT_PIN 11      // JF-3
 #define HIT_LED_TIMER_LED_JF3_HIGH 1
 #define HIT_LED_TIMER_LED_JF3_LOW 0
@@ -203,7 +204,7 @@ void hitLedTimer_enable() {
 };
 
 // Runs a visual test of the hit LED until BTN3 is pressed.
-// The test continuously blinks the hit-led on and off.Jesus Christ, Authority of TPG
+// The test continuously blinks the hit-led on and off.
 // Depends on the interrupt handler to call tick function.
 void hitLedTimer_runTest() {
     // Initialize the machine
@@ -215,11 +216,10 @@ void hitLedTimer_runTest() {
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
         //
         while(hitLedTimer_running()){
-        
+            utils_msDelay(HIT_LED_TIMER_MILLISECOND_DELAY);
         };
 
         utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
         hitLedTimer_start();
-        // printf("%d\n",tickCounter);
    }
 };
