@@ -114,6 +114,7 @@ void lockoutTimer_tick() {
                 //Reset tickCount to 0 and set active to false
                 tickCount = 0;
                 active = false;
+                startTimer = false;
             }
             break;
 
@@ -147,7 +148,7 @@ void lockoutTimer_start() {
 
 // Returns true if the timer is running.
 bool lockoutTimer_running() {
-    return (currentState == ACTIVE_ST) || active;
+    return (currentState == ACTIVE_ST) || active || startTimer;
 };
 
 // Test function assumes interrupts have been completely enabled and
@@ -159,7 +160,6 @@ bool lockoutTimer_running() {
 bool lockoutTimer_runTest() {
     // Start an interval timer
     intervalTimer_init(1);
-    intervalTimer_reset(1);
     intervalTimer_start(1);
     
     // Invoke lockoutTimer_start()
@@ -167,8 +167,9 @@ bool lockoutTimer_runTest() {
 
     // Wait while lockoutTimer_running() is true (another while-loop)
     while (lockoutTimer_running()) {
-
     }
+        printf("hi\n");
+
 
     // Once lockoutTimer_running() is false, stop the interval timer
     intervalTimer_stop(1);
