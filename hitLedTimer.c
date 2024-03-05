@@ -214,11 +214,12 @@ void hitLedTimer_runTest() {
     // printf("Testing\n");
     // Infinitely test the half second timer
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
-        //
+        // While it is actively running
         while(hitLedTimer_running()){
             utils_msDelay(HIT_LED_TIMER_MILLISECOND_DELAY);
         };
 
+        // Restart machine
         utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
         hitLedTimer_start();
    }

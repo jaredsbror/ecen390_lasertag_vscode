@@ -73,8 +73,8 @@ int main() {
   interrupts_enableArmInts(); // now the ARM processor can see interrupts.
 
   // transmitter_runTestNoncontinuous(); // FUNCTIONAL
-  transmitter_runTestContinuous();  // FUNCTIONAL
-  // trigger_runTest();
+  // transmitter_runTestContinuous();  // FUNCTIONAL
+  trigger_runTest();
   // hitLedTimer_runTest(); // FUNCTIONAL
   // lockoutTimer_runTest(); // FUNCTIONAL
 #endif

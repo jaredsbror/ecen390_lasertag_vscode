@@ -14,8 +14,11 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "buttons.h"
 #include "mio.h"
 #include "utils.h"
+#include "transmitter.h"
 
-#define DEBUG_TRIGGER true  // If true, debug messages enabled
+// Uncomment for debug prints
+#define DEBUG_SINGLE_LETTER_PRINTOUTS true  // Single letter debug messages
+#define DEBUG_TRIGGER false  // If true, debug messages enabled
 
 // The trigger state machine debounces both the press and release of gun
 // trigger. Ultimately, it will activate the transmitter when a debounced press
@@ -43,10 +46,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // subtracted if trigger_tick() is invoked anywhere else.
 
 // Debouncing values
-#define TRIGGER_DEBOUNCE_PRESS_DELAY 5 // ticks, 50 ms
-#define TRIGGER_DEBOUNCE_RELEASE_DELAY 5 // ticks, 50 ms
-
-#define TRIGGER_TEST_TICK_PERIOD_IN_MS 10
+#define TRIGGER_DEBOUNCE_PRESS_DELAY 50 // ticks, 50 ms
+#define TRIGGER_DEBOUNCE_RELEASE_DELAY 50 // ticks, 50 ms
+#define TRIGGER_DEBOUNCE_MILLISECOND_DELAY 1    // Slow down the loop
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"
@@ -67,12 +69,12 @@ enum trigger_st_st {
 static enum trigger_st_st currentState;
 
 // Global variables
-static trigger_shotsRemaining_t shotsRemaining;
-static uint32_t tickCount;
-static bool buttonZeroPressed;
-static bool enable;
-static bool pressConfirmed;
-static bool releaseConfirmed;
+volatile static trigger_shotsRemaining_t shotsRemaining;
+volatile static uint32_t tickCount;
+volatile static bool buttonZeroPressed;
+volatile static bool enable;
+volatile static bool pressConfirmed;
+volatile static bool releaseConfirmed;
 
 // This is a debug state print routine. It will print the names of the states each
 // time tick() is called. It only prints states if they are different than the
@@ -182,6 +184,10 @@ void trigger_tick() {
                 tickCount = 0;
                 pressConfirmed = true;
                 releaseConfirmed = false;
+                // Run the transmitter
+                // transmitter_run(); //??? Reactivate later
+                // Print out char
+                if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
             }
             break;
 
@@ -203,6 +209,8 @@ void trigger_tick() {
                 tickCount = 0;
                 pressConfirmed = false;
                 releaseConfirmed = true;
+                // Print out char
+                if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("U\n");
             }
             break;
 
@@ -262,22 +270,14 @@ void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
 // is pressed, and a 'U' when the trigger or BTN0 is released.
 // Depends on the interrupt handler to call tick function.
 void trigger_runTest() {
-    // trigger_init();
-    // trigger_enable();
-    // while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
-    //     // printf("Can you hear me???? I'm in the while loop in trigger.c runTest!\n");
-    //     trigger_tick();
-    //     utils_msDelay(TRIGGER_TEST_TICK_PERIOD_IN_MS);
-    // }
 
     // Initialize the machine
     trigger_init();
     trigger_enable(); //sets enable to true
     // Infinitely test the trigger
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
-        //
-        
-    
+        // Slow down the machine
+        utils_msDelay(TRIGGER_DEBOUNCE_MILLISECOND_DELAY);
     };
 
 };

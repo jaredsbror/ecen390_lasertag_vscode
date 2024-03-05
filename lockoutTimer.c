@@ -171,8 +171,6 @@ bool lockoutTimer_runTest() {
     while (lockoutTimer_running()) {
         utils_msDelay(LOCKOUT_TIMER_FUNCTIONAL_DELAY);
     }
-    // printf("\n\r");
-
 
     // Once lockoutTimer_running() is false, stop the interval timer
     intervalTimer_stop(1);
