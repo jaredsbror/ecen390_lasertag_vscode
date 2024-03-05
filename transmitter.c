@@ -292,10 +292,7 @@ void transmitter_runTest() {
             transmitter_tick();                                 // tick.
             utils_msDelay(TRANSMITTER_TEST_TICK_PERIOD_IN_MS);  // short delay between ticks.
         }
-        // printf("completed one test period.\n");
-
-        // Delay rerun of test depending on continuousMode
-        if (!continuousMode) utils_msDelay(TRANSMITTER_NONCONTINUOUS_TEST_MS_DELAY);
+        printf("completed one test period.\n");
     }
     do {utils_msDelay(BOUNCE_DELAY);} while (buttons_read());
     printf("exiting transmitter_runTest()\n");
@@ -312,7 +309,23 @@ void transmitter_runTest() {
 void transmitter_runTestNoncontinuous() {
     // Set variables
     continuousMode = false;
-    transmitter_runTest();
+    printf("starting transmitter_runTestNoncontinuous()\n");
+    transmitter_init();                                // init the transmitter.
+    while (!(buttons_read() & BUTTONS_BTN3_MASK)) {        // Run continuously until BTN3 is pressed.
+        uint16_t switchValue = switches_read() % FILTER_FREQUENCY_COUNT;  // Compute a safe number from the switches.
+        transmitter_setFrequencyNumber(switchValue);          // set the frequency number based upon switch value.
+        transmitter_run();                                    // Start the transmitter.
+        while (transmitter_running()) {                       // Keep ticking until it is done.
+            transmitter_tick();                                 // tick.
+            utils_msDelay(TRANSMITTER_TEST_TICK_PERIOD_IN_MS);  // short delay between ticks.
+        }
+        printf("completed one test period.\n");
+
+        // Delay rerun of test depending on continuousMode
+        utils_msDelay(TRANSMITTER_NONCONTINUOUS_TEST_MS_DELAY);
+    }
+    do {utils_msDelay(BOUNCE_DELAY);} while (buttons_read());
+    printf("exiting transmitter_runTestNoncontinuous()\n");
 };
 
 // Tests the transmitter in continuous mode.
@@ -327,5 +340,18 @@ void transmitter_runTestNoncontinuous() {
 void transmitter_runTestContinuous() {
     // Set variables
     continuousMode = true;
-    transmitter_runTest();
+    printf("starting transmitter_runTestNoncontinuous()\n");
+    transmitter_init();                                // init the transmitter.
+    while (!(buttons_read() & BUTTONS_BTN3_MASK)) {        // Run continuously until BTN3 is pressed.
+        uint16_t switchValue = switches_read() % FILTER_FREQUENCY_COUNT;  // Compute a safe number from the switches.
+        transmitter_setFrequencyNumber(switchValue);          // set the frequency number based upon switch value.
+        transmitter_run();                                    // Start the transmitter.
+        while (transmitter_running()) {                       // Keep ticking until it is done.
+            transmitter_tick();                                 // tick.
+            utils_msDelay(TRANSMITTER_TEST_TICK_PERIOD_IN_MS);  // short delay between ticks.
+        }
+        printf("completed one test period.\n");
+    }
+    do {utils_msDelay(BOUNCE_DELAY);} while (buttons_read());
+    printf("exiting transmitter_runTestNoncontinuous()\n");
 };
