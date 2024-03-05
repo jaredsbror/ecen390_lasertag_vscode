@@ -262,11 +262,26 @@ void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
 // is pressed, and a 'U' when the trigger or BTN0 is released.
 // Depends on the interrupt handler to call tick function.
 void trigger_runTest() {
+    // trigger_init();
+    // trigger_enable();
+    // while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
+    //     // printf("Can you hear me???? I'm in the while loop in trigger.c runTest!\n");
+    //     trigger_tick();
+    //     utils_msDelay(TRIGGER_TEST_TICK_PERIOD_IN_MS);
+    // }
+
+    // Initialize the machine
     trigger_init();
-    trigger_enable();
+    trigger_enable(); //sets enable to true
+    // Infinitely test the half second timer
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
-        // printf("Can you hear me???? I'm in the while loop in trigger.c runTest!\n");
-        trigger_tick();
+        //
+        while(hitLedTimer_running()){
+
+        };
+
         utils_msDelay(TRIGGER_TEST_TICK_PERIOD_IN_MS);
-    }
+    
+    };
+
 };

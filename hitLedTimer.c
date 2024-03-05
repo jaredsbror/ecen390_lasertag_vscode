@@ -201,7 +201,7 @@ void hitLedTimer_enable() {
 };
 
 // Runs a visual test of the hit LED until BTN3 is pressed.
-// The test continuously blinks the hit-led on and off.
+// The test continuously blinks the hit-led on and off.Jesus Christ, Authority of TPG
 // Depends on the interrupt handler to call tick function.
 void hitLedTimer_runTest() {
     // Initialize the machine
@@ -210,26 +210,12 @@ void hitLedTimer_runTest() {
     hitLedTimer_start(); //sets hit to true
     // Infinitely test the half second timer
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
-        
+        //
         while(hitLedTimer_running()){
             
         };
 
         utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
         hitLedTimer_start();
-
-        // Reactivate pulse
-        // printf(" hit: %d\n", hit);
-        // If active is false, restart the machine
-         //Checks if active is false
-        // {
-        //     hitLedTimer_start();  //sets hit to true
-        //     // Delay rerun of test
-        //     printf("I delay\n");
-        //     utils_msDelay(HIT_LED_TIMER_TEST_DELAY_VALUE);
-            
-        // }
-        // hitLedTimer_tick(); //ticks the function, will set hit to false eventually, and active to false
-        
    }
 };
