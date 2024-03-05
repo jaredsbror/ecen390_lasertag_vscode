@@ -33,7 +33,7 @@ void isr_function() {
 
     // Call tick functions
     // hitLedTimer_tick();
-    lockoutTimer_tick();
+    // lockoutTimer_tick();
     // transmitter_tick();
     // trigger_tick();
 };

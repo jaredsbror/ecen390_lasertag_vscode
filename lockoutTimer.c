@@ -12,6 +12,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include <stdint.h>
 #include "intervalTimer.h"
 #include "lockoutTimer.h"
+#include "utils.h"
 
 #define DEBUG_LOCKOUT_TIMER true  // If true, debug messages enabled
 
@@ -20,6 +21,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // This ensures that only one hit is detected per 1/2-second interval.
 
 #define LOCKOUT_TIMER_EXPIRE_VALUE 50000 // Defined in terms of 100 kHz ticks.
+#define LOCKOUT_TIMER_FUNCTIONAL_DELAY 1    // Imitate a pause to slow down the test loop
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"
@@ -148,7 +150,7 @@ void lockoutTimer_start() {
 
 // Returns true if the timer is running.
 bool lockoutTimer_running() {
-    return (currentState == ACTIVE_ST) || active || startTimer;
+    return ((currentState == ACTIVE_ST) || (active) || (startTimer));
 };
 
 // Test function assumes interrupts have been completely enabled and
@@ -164,17 +166,18 @@ bool lockoutTimer_runTest() {
     
     // Invoke lockoutTimer_start()
     lockoutTimer_start();
-
+ 
     // Wait while lockoutTimer_running() is true (another while-loop)
     while (lockoutTimer_running()) {
+        utils_msDelay(LOCKOUT_TIMER_FUNCTIONAL_DELAY);
     }
-        printf("hi\n");
+    // printf("\n\r");
 
 
     // Once lockoutTimer_running() is false, stop the interval timer
     intervalTimer_stop(1);
 
     // Print out the time duration from the interval timer
-    printf("Interval Timer Duration (s): %lf\n", intervalTimer_getTotalDurationInSeconds(1));
+    printf("\nInterval Timer Duration (s): %lf\n", intervalTimer_getTotalDurationInSeconds(1));
 
 };
