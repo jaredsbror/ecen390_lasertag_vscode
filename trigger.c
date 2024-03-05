@@ -276,9 +276,7 @@ void trigger_runTest() {
     // Infinitely test the trigger
     while (!(buttons_read() & BUTTONS_BTN3_MASK)) {
         //
-        while(currentState == ){
-
-        };
+        
     
     };
 
