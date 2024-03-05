@@ -278,7 +278,7 @@ void transmitter_setContinuousMode(bool continuousModeFlag) {
 
 #define BOUNCE_DELAY 5
 #define TRANSMITTER_TEST_TICK_PERIOD_IN_MS 10
-#define TRANSMITTER_NONCONTINUOUS_TEST_MS_DELAY 300
+#define TRANSMITTER_NONCONTINUOUS_TEST_MS_DELAY 400
 // Prints out the clock waveform to stdio. Terminates when BTN1 is pressed.
 // Prints out one line of 1s and 0s that represent one period of the clock signal, in terms of ticks.
 void transmitter_runTest() {
@@ -292,7 +292,7 @@ void transmitter_runTest() {
             transmitter_tick();                                 // tick.
             utils_msDelay(TRANSMITTER_TEST_TICK_PERIOD_IN_MS);  // short delay between ticks.
         }
-        printf("completed one test period.\n");
+        // printf("completed one test period.\n");
 
         // Delay rerun of test depending on continuousMode
         if (!continuousMode) utils_msDelay(TRANSMITTER_NONCONTINUOUS_TEST_MS_DELAY);
