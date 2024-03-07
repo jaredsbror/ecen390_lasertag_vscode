@@ -11,6 +11,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "lockoutTimer.h"
 #include "transmitter.h"
 #include "trigger.h"
+#include "interrupts.h"
+#include "buffer.h"
 #include "isr.h"
 #include <stdio.h>
 
@@ -26,6 +28,7 @@ void isr_init() {
     lockoutTimer_init();
     transmitter_init();
     trigger_init();
+    buffer_init();
 };
 
 // This function is invoked by the timer interrupt at 100 kHz.
@@ -36,5 +39,8 @@ void isr_function() {
     lockoutTimer_tick();
     transmitter_tick();
     trigger_tick();
+
+    // Get adc data
+    buffer_pushover(interrupts_getAdcData());
 };
 
