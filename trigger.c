@@ -185,7 +185,7 @@ void trigger_tick() {
                 pressConfirmed = true;
                 releaseConfirmed = false;
                 // Run the transmitter
-                // transmitter_run(); //??? Reactivate later
+                transmitter_run(); //??? Reactivate later
                 // Print out char
                 if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
             }
