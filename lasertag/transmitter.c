@@ -138,6 +138,7 @@ void transmitter_init() {
 void transmitter_tick() {
     // Transmitter tick count
     static uint32_t transmitterTick;
+
     
     // Optional debug messages
     if (DEBUG_TRANSMITTER) debugStatePrint();
@@ -254,7 +255,7 @@ void transmitter_setFrequencyNumber(uint16_t frequencyNumber) {
         newFrequency = frequencyNumber;
     }
 };
-
+  
 // Returns the current frequency setting.
 uint16_t transmitter_getFrequencyNumber() {
     return frequency;

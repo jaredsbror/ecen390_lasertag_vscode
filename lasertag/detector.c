@@ -136,6 +136,8 @@ static void selectionSort(double arr[], uint16_t indexes[], uint16_t size) {
 bool detector_hit_detect() {
     // printf("STARTING: Detector_hitDetected\n");
 
+    //???
+
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
     

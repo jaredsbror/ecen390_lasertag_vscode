@@ -185,6 +185,10 @@ void runningModes_initAll(void) {
 
 // Returns the current switch-setting
 uint16_t runningModes_getFrequencySetting(void) {
+
+  // Optional debug
+  // printf("Switches: %04X\n", switches_read() & 0xF);
+
   uint16_t switchSetting = switches_read() & 0xF; // Bit-mask the results.
   // Provide a nice default if the slide switches are in error.
   if (!(switchSetting < FILTER_FREQUENCY_COUNT))
