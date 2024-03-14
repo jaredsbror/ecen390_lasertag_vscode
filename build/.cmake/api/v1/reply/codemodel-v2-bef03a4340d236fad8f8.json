@@ -1,0 +1,150 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14.5"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						2
+					]
+				},
+				{
+					"build" : "lasertag",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-lasertag-Debug-ca09c234db3fa96e954f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14.5"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "lasertag",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "lasertag/sound",
+					"jsonFile" : "directory-lasertag.sound-Debug-33fa6223c0f14bd0ed8f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14.5"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "lasertag/sound",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "lasertag/support",
+					"jsonFile" : "directory-lasertag.support-Debug-f0112f07b972476bc855.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14.5"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "lasertag/support",
+					"targetIndexes" : 
+					[
+						4
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					],
+					"name" : "ecen390",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "BOOT.bin::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BOOT.bin-Debug-56f0b080724152fd2f09.json",
+					"name" : "BOOT.bin",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "lasertag.elf::@d935bcaf5bd80736138b",
+					"jsonFile" : "target-lasertag.elf-Debug-6c7322a114de4790d818.json",
+					"name" : "lasertag.elf",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "run::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-run-Debug-d153ef993a56ad2b1915.json",
+					"name" : "run",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "sound::@7e30312d06299694cadd",
+					"jsonFile" : "target-sound-Debug-74d336cbc91e4733f440.json",
+					"name" : "sound",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "support::@ed5122f37444abd2963e",
+					"jsonFile" : "target-support-Debug-79fe86211c2f8d3f488b.json",
+					"name" : "support",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/auto/fsd/jcrook12/ecen390/build",
+		"source" : "/auto/fsd/jcrook12/ecen390"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

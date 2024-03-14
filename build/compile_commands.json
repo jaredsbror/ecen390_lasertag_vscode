@@ -1,0 +1,127 @@
+[
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/main.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/main.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/main.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/queue.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/queue.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/queue.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/filter.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/filter.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/filter.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/isr.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/isr.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/isr.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/trigger.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/trigger.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/trigger.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/transmitter.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/transmitter.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/transmitter.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/lockoutTimer.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/lockoutTimer.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/lockoutTimer.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/buffer.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/buffer.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/buffer.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/detector.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/detector.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/detector.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/bcfire01_48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/bcfire01_48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/bcfire01_48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/gameBoyStartup.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/gameBoyStartup.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/gameBoyStartup.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/gameOver48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/gameOver48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/gameOver48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/gunEmpty48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/gunEmpty48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/gunEmpty48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/ouch48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/ouch48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/ouch48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/pacmanDeath.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/pacmanDeath.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/pacmanDeath.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/powerUp48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/powerUp48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/powerUp48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/screamAndDie48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/screamAndDie48k.wav.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/screamAndDie48k.wav.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/sound.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/sound.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/bufferTest.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/bufferTest.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/bufferTest.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/filterTest.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/filterTest.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/filterTest.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/histogram.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/histogram.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/histogram.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/queueTest.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/queueTest.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/queueTest.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/runningModes.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/runningModes.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/runningModes.c"
+},
+{
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/support",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/support.dir/timer_ps.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/support/timer_ps.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/support/timer_ps.c"
+}
+]

@@ -1,0 +1,13 @@
+/auto/fsd/jcrook12/ecen390/build/CMakeFiles/BOOT.bin.dir
+/auto/fsd/jcrook12/ecen390/build/CMakeFiles/run.dir
+/auto/fsd/jcrook12/ecen390/build/CMakeFiles/edit_cache.dir
+/auto/fsd/jcrook12/ecen390/build/CMakeFiles/rebuild_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/CMakeFiles/lasertag.elf.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/CMakeFiles/edit_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/CMakeFiles/rebuild_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/sound/CMakeFiles/sound.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/sound/CMakeFiles/edit_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/sound/CMakeFiles/rebuild_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/support/CMakeFiles/support.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/support/CMakeFiles/edit_cache.dir
+/auto/fsd/jcrook12/ecen390/build/lasertag/support/CMakeFiles/rebuild_cache.dir
