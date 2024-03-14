@@ -78,9 +78,6 @@ void detector_init(void) {
        detectorHitArray[i] = 0;
    }
 
-
-
-
 };
 
 
@@ -90,11 +87,11 @@ void detector_init(void) {
 void detector_setIgnoredFrequencies(bool freqArray[]) {
 
 
-//    // Check for arary size
-//    if (sizeof(freqArray) > FILTER_FREQUENCY_COUNT) {
-//        printf("ERROR: freqArray[] size %d is greater than %d in detector_setIgnoredFrequencies()\n", sizeof(freqArray), FILTER_FREQUENCY_COUNT);
-//        return;
-//    }
+   // Check for array size
+   if (sizeof(freqArray) > FILTER_FREQUENCY_COUNT) {
+       printf("ERROR: freqArray[] size %d is greater than %d in detector_setIgnoredFrequencies()\n", sizeof(freqArray), FILTER_FREQUENCY_COUNT);
+       return;
+   }
 
 
    // Set ignored player frequencies
