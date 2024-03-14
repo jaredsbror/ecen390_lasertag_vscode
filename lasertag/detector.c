@@ -136,10 +136,17 @@ static void selectionSort(double arr[], uint16_t indexes[], uint16_t size) {
 bool detector_hit_detect() {
     // printf("STARTING: Detector_hitDetected\n");
 
-    //???
-
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
+
+    // ???
+    // printf("PowerValues {");
+    // // Print out power values for debug
+    // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+    //     printf("%d", powerValues[i]);
+    //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+    // }
+    // printf("}\n");
     
     // Sort the power values
     // 1) Copy the values to powerValues_sorted and reset playerFrequencies_sorted
@@ -150,13 +157,12 @@ bool detector_hit_detect() {
     // 2) Use selection sort algorithm
     selectionSort(powerValues_sorted, playerFrequencies_sorted, FILTER_FREQUENCY_COUNT);
 
-
     // Calculate median power value and baseline power
     double powerValue_median = powerValues_sorted[MEDIAN_POWER_VALUE_INDEX];
     double base_line = powerValue_median * fudge_factor;
     
     // Reset hitDetected;
-    detector_hitDetectedFlag = false;
+    // detector_hitDetectedFlag = false;
     // Iterate through the sorted power values array...
     for (int32_t i = FILTER_FREQUENCY_COUNT - 1; i >= 0; i--) {
         // If the associated frequency is not ignored...
@@ -167,7 +173,17 @@ bool detector_hit_detect() {
                 //    printf("Oh hey we got a hit\n");
                 detector_hitDetectedFlag = true;
                 frequencyNumberOfLastHit = playerFrequencies_sorted[i];
-                detectorHitArray[i]++;
+                detectorHitArray[playerFrequencies_sorted[i]] += 1;
+
+                //???
+                // printf("detectorHitArray {");
+                // // Print out power values for debug
+                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                //     printf("%d", detectorHitArray[i]);
+                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                // }
+                // printf("}\n");
+
                 return detector_hitDetectedFlag;
             }
         }
@@ -276,6 +292,15 @@ void detector(bool interruptsCurrentlyEnabled){
                     // 2nd false means no debug prints.
                     filter_computePower(filterNumber, false, false);
                 }
+
+                // printf("PowerValues {");
+                // // Print out power values for debug
+                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                //     printf("%d", powerValues[i]);
+                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                // }
+                // printf("}\n");
+
                // if the lockoutTimer is not running, run the hit-detection algorithm...
                if (lockoutTimer_running() == false) {
 

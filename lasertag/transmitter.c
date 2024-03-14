@@ -160,6 +160,7 @@ void transmitter_tick() {
                 // Update frequency and frequencyTicks values for next pulse
                 frequency = newFrequency;
                 frequencyTicks = newFrequencyTicks;
+                // Optional debug: printf("frequency = %d\n", frequency);
                 //Set JF1 pin to ON when transistion to ON_ST
                 transmitter_set_jf1_to_one();
             } else{
@@ -251,6 +252,7 @@ void transmitter_setFrequencyNumber(uint16_t frequencyNumber) {
     // Set frequency ONLY IF state machine is currently inactive
     if (currentState == INACTIVE_ST) {
         // Divide by 2 to get half cycles
+        // Optional debug // printf("newFrequency = %d\n", frequencyNumber);
         newFrequencyTicks = filter_getFrequencyTick(frequencyNumber) / DIVIDE_BY_TWO;
         newFrequency = frequencyNumber;
     }
