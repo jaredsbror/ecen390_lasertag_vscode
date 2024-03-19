@@ -85,15 +85,7 @@ void detector_init(void) {
 // the frequency will be ignored. Multiple frequencies can be ignored.
 // Your shot frequency (based on the switches) is a good choice to ignore.
 void detector_setIgnoredFrequencies(bool freqArray[]) {
-
-
-   // Check for array size
-   if (sizeof(freqArray) > FILTER_FREQUENCY_COUNT) {
-       printf("ERROR: freqArray[] size %d is greater than %d in detector_setIgnoredFrequencies()\n", sizeof(freqArray), FILTER_FREQUENCY_COUNT);
-       return;
-   }
-
-
+    
    // Set ignored player frequencies
    for (uint16_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
        ignoredPlayerFrequencies[i] = freqArray[i];
@@ -132,6 +124,13 @@ static void selectionSort(double arr[], uint16_t indexes[], uint16_t size) {
     }
 }
 
+// Clear the detected hit once you have accounted for it.
+void detector_clearHit(void) {
+   // Set global detection variable to false
+   detector_hitDetectedFlag = false;
+};
+
+
 // Detect a hit
 bool detector_hit_detect() {
     // printf("STARTING: Detector_hitDetected\n");
@@ -161,8 +160,9 @@ bool detector_hit_detect() {
     double powerValue_median = powerValues_sorted[MEDIAN_POWER_VALUE_INDEX];
     double base_line = powerValue_median * fudge_factor;
     
+
     // Reset hitDetected;
-    // detector_hitDetectedFlag = false;
+    detector_clearHit();
     // Iterate through the sorted power values array...
     for (int32_t i = FILTER_FREQUENCY_COUNT - 1; i >= 0; i--) {
         // If the associated frequency is not ignored...
@@ -175,14 +175,14 @@ bool detector_hit_detect() {
                 frequencyNumberOfLastHit = playerFrequencies_sorted[i];
                 detectorHitArray[playerFrequencies_sorted[i]] += 1;
 
-                //???
-                // printf("detectorHitArray {");
-                // // Print out power values for debug
-                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-                //     printf("%d", detectorHitArray[i]);
-                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
-                // }
-                // printf("}\n");
+                // ???
+                printf("detectorHitArray {");
+                // Print out power values for debug
+                for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                    printf("%d", detectorHitArray[i]);
+                    printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                }
+                printf("}\n");
 
                 return detector_hitDetectedFlag;
             }
@@ -203,14 +203,6 @@ bool detector_hitDetected(void) {
 uint16_t detector_getFrequencyNumberOfLastHit(void) {
    return frequencyNumberOfLastHit;
 };
-
-
-// Clear the detected hit once you have accounted for it.
-void detector_clearHit(void) {
-   // Set global detection variable to false
-   detector_hitDetectedFlag = false;
-};
-
 
 // Ignore all hits. Used to provide some limited invincibility in some game
 // modes. The detector will ignore all hits if the flag is true, otherwise will
@@ -331,28 +323,34 @@ void detector(bool interruptsCurrentlyEnabled){
 // on each set. With the same fudge factor, your hit detect algorithm
 // should detect a hit on the first set and not detect a hit on the second.
 void detector_runTest(void) {
-    // printf("Running M3 T3 test\n");
+    printf("STARTING: Detector_runTest()\n");
     detector_init();
     
     bool ignored_frequencies[FILTER_FREQUENCY_COUNT] = {false};
 
-    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 1500, 15};
+    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15};
+    // 
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values[i]);
     }
-
+    // 
     detector_setIgnoredFrequencies(ignored_frequencies);
-    detector_hitDetected();
-    printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-
+    detector_hit_detect();
     
+    if (detector_hitDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
+    else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
   
     uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 10, 15};
+    // 
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values2[i]);
     }
+    // 
     detector_setIgnoredFrequencies(ignored_frequencies);
-    detector_hitDetected();
-    printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
- 
+    detector_hit_detect();
+    
+    if (detector_hitDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
+    else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
+
+    printf("TERMINATING: Detector_runTest()\n");
 };
