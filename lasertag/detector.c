@@ -335,7 +335,7 @@ void detector_runTest(void) {
     }
     // Print out result
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
+    else printf("Hit not detected\n");
   
 
     uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15};
@@ -345,7 +345,7 @@ void detector_runTest(void) {
     }
     // Print out result
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
+    else printf("Hit not detected\n");
 
     uint32_t power_Values3[FILTER_FREQUENCY_COUNT] = {10, 20, 30, 40, 20, 60, 70, 80, 100, 1500};
     // Populate current power values
@@ -354,7 +354,7 @@ void detector_runTest(void) {
     }
     // Print out result
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
+    else printf("Hit not detected\n");
 
 
     printf("TERMINATING: Detector_runTest()\n");
