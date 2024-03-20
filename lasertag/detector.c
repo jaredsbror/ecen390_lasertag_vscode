@@ -28,7 +28,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define HALF_OF_MAX_ADC_VALUE 2047.5
 //
 #define MEDIAN_POWER_VALUE_INDEX 4
-#define FUDGE_FACTOR 350
+#define FUDGE_FACTOR 50
 
 
 //
@@ -67,7 +67,7 @@ void detector_init(void) {
    fudge_factor_index = 0;
    invocationCount = 0;
    frequencyNumberOfLastHit = 0;
-   fudge_factor = 50;
+   fudge_factor = FUDGE_FACTOR;
 
 
    // Set all frequencies to not be ignored
@@ -141,7 +141,8 @@ bool detector_hitCurrentlyDetected() {
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
 
-    // ???
+    // Optional debug statement
+    if (DEBUG_DETECTOR) 
     // printf("PowerValues {");
     // // Print out power values for debug
     // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {

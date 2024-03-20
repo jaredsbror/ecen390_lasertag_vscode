@@ -2,8 +2,8 @@
 // Created by joshua on 1/11/24.
 //
 
-#ifndef ECEN390_BYUWINTER2024_LASER_TAG_QUEUE_H
-#define ECEN390_BYUWINTER2024_LASER_TAG_QUEUE_H
+#ifndef LASER_TAG_QUEUE_H
+#define LASER_TAG_QUEUE_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -110,4 +110,4 @@ bool queue_overflow(queue_t *q);
 // Frees the storage that you malloc'd before.
 void queue_garbageCollect(queue_t *q);
 
-#endif //ECEN390_BYUWINTER2024_LASER_TAG_QUEUE_H
+#endif //LASER_TAG_QUEUE_H

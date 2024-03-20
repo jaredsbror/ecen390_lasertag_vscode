@@ -17,6 +17,7 @@
 #define FIR_COEFFICIENTS_COUNT 81
 
 #define POWER_200_SIZE 200
+#define STRING_LENGTH_20 20
 
 static queue_t xQueue;
 static queue_t yQueue;
@@ -244,7 +245,7 @@ void initZQueue() {
   for (int32_t i = 0; i < Z_QUEUE_SIZE; i++) {
 
     // Custom naming
-    char name[20];
+    char name[STRING_LENGTH_20];
     sprintf(name, "zQueue%d", i);
     // Init zQueue
     queue_init(&zQueues[i], Z_QUEUE_SIZE, name);
@@ -261,7 +262,7 @@ void initOutputQueue() {
   // Iterate through outputQueues
   for (int32_t i = 0; i < OUTPUT_QUEUE_SIZE; i++) {
     // Custom name
-    char name[20];
+    char name[STRING_LENGTH_20];
     sprintf(name, "outputQueue%d", i);
     // Init outputQueues
     queue_init(&outputQueues[i], OUTPUT_QUEUE_DATA_SIZE, name);
