@@ -21,11 +21,14 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "utils.h"
 
 
+#define DEBUG_DETECTOR false
+
+
 // Used to normalize the adc inputs to values between -1 and 1
 #define HALF_OF_MAX_ADC_VALUE 2047.5
 //
 #define MEDIAN_POWER_VALUE_INDEX 4
-#define FUDGE_FACTOR 1000
+#define FUDGE_FACTOR 350
 
 
 //
@@ -132,8 +135,8 @@ void detector_clearHit(void) {
 
 
 // Detect a hit
-bool detector_hit_detect() {
-    // printf("STARTING: Detector_hitDetected\n");
+bool detector_hitCurrentlyDetected() {
+    // printf("STARTING: detector_hitCurrentlyDetected\n");
 
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
@@ -175,26 +178,26 @@ bool detector_hit_detect() {
                 frequencyNumberOfLastHit = playerFrequencies_sorted[i];
                 detectorHitArray[playerFrequencies_sorted[i]] += 1;
 
-                // ???
-                printf("detectorHitArray {");
-                // Print out power values for debug
-                for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-                    printf("%d", detectorHitArray[i]);
-                    printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
-                }
-                printf("}\n");
+                // // ???
+                // printf("detectorHitArray {");
+                // // Print out power values for debug
+                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                //     printf("%d", detectorHitArray[i]);
+                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                // }
+                // printf("}\n");
 
                 return detector_hitDetectedFlag;
             }
         }
     }
 
-    // printf("TERMINATING: Detector_hitDetected()\n");
+    // printf("TERMINATING: detector_hitCurrentlyDetected()\n");
     return detector_hitDetectedFlag;
 }
 
 // Returns true if a hit was detected.
-bool detector_hitDetected(void) {
+bool detector_hitPreviouslyDetected(void) {
    return detector_hitDetectedFlag;
 };
 
@@ -298,7 +301,7 @@ void detector(bool interruptsCurrentlyEnabled){
 
                    // If you detect a hit and the frequency with maximum power is
                    // not an ignored frequency...
-                   if (detector_hit_detect()) {
+                   if (detector_hitCurrentlyDetected()) {
                         
                         lockoutTimer_start();   // Start lockoutTimer
                         hitLedTimer_enable();   // Start hitLedTimer (line 1)
@@ -326,30 +329,31 @@ void detector_runTest(void) {
     printf("STARTING: Detector_runTest()\n");
     detector_init();
     
+    // 
     bool ignored_frequencies[FILTER_FREQUENCY_COUNT] = {false};
 
-    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15};
+    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {100, 20, 3000, 400, 500, 60, 70, 80, 2000, 15};
     // 
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values[i]);
     }
     // 
     detector_setIgnoredFrequencies(ignored_frequencies);
-    detector_hit_detect();
     
-    if (detector_hitDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
+    // 
+    if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
     else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
   
-    uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 10, 15};
+    uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15};
     // 
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values2[i]);
     }
     // 
     detector_setIgnoredFrequencies(ignored_frequencies);
-    detector_hit_detect();
     
-    if (detector_hitDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
+    // 
+    if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
     else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
 
     printf("TERMINATING: Detector_runTest()\n");

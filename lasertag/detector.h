@@ -39,10 +39,10 @@ void detector_setIgnoredFrequencies(bool freqArray[]);
 void detector(bool interruptsCurrentlyEnabled);
 
 // Detect a hit
-bool detector_hit_detect();
+bool detector_hitCurrentlyDetected();
 
 // Returns true if a hit was detected.
-bool detector_hitDetected(void);
+bool detector_hitPreviouslyDetected(void);
 
 // Returns the frequency number that caused the hit.
 uint16_t detector_getFrequencyNumberOfLastHit(void);

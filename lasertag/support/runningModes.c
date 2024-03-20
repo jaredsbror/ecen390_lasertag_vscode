@@ -301,7 +301,7 @@ void runningModes_shooter(void) {
                                                 // doing something.
     // Run filters, compute power, run hit-detection.
     detector(INTERRUPTS_CURRENTLY_ENABLED); // Interrupts are currently enabled.
-    if (detector_hitDetected()) {           // Hit detected
+    if (detector_hitPreviouslyDetected()) {           // Hit detected
       hitCount++;                           // increment the hit count.
       detector_clearHit();                  // Clear the hit.
       detector_hitCount_t
