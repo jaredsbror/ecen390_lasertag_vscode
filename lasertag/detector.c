@@ -30,6 +30,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define MEDIAN_POWER_VALUE_INDEX 4
 #define FUDGE_FACTOR 50
 
+#define QUEUE_1 {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15}
+#define QUEUE_2  {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15}
+#define QUEUE_3 {10, 20, 30, 40, 20, 60, 70, 80, 100, 3000}
+
 
 // 
 typedef uint16_t detector_hitCount_t;
@@ -40,18 +44,18 @@ static uint64_t invocationCount;    // Number of times detector is called
 
 static bool ignoreAllHits;  // If true, ignore all hits
 static uint16_t frequencyNumberOfLastHit;   // Frequency of last hit
-// 
+/
 static const uint32_t FUDGE_FACTORS[FILTER_FREQUENCY_COUNT];    // Possible fudge factors
 static uint32_t fudge_factor_index; // Fudge factor array index
-static uint32_t fudge_factor;
-// 
+static uint32_t fudge_factor; // this is our fudge factor, but this is so we can modify the fudge factor later and iterate through.
+
 static bool ignoredPlayerFrequencies[FILTER_FREQUENCY_COUNT];   // Ignored player frequencies
 static double powerValues[FILTER_FREQUENCY_COUNT];  // Unsorted power values
 static double powerValues_sorted[FILTER_FREQUENCY_COUNT];   // Sorted power values
 static uint16_t playerFrequencies_sorted[FILTER_FREQUENCY_COUNT];   // Player frequencies
 static detector_hitCount_t detectorHitArray[FILTER_FREQUENCY_COUNT];    // Player hits
-// 
-static bool detector_hitDetectedFlag;
+
+static bool detector_hitDetectedFlag;   // Hit detected
 
 
 // Initialize the detector module.
@@ -328,7 +332,7 @@ void detector_runTest(void) {
     detector_setIgnoredFrequencies(ignored_frequencies);
 
 
-    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15};
+    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = QUEUE_1;
     // Populate current power values
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values[i]);
@@ -338,7 +342,7 @@ void detector_runTest(void) {
     else printf("Hit not detected\n");
   
 
-    uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15};
+    uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = QUEUE_2;
     // Populate current power values
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values2[i]);
@@ -347,7 +351,8 @@ void detector_runTest(void) {
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
     else printf("Hit not detected\n");
 
-    uint32_t power_Values3[FILTER_FREQUENCY_COUNT] = {10, 20, 30, 40, 20, 60, 70, 80, 100, 1500};
+
+    uint32_t power_Values3[FILTER_FREQUENCY_COUNT] = QUEUE_3;
     // Populate current power values
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values3[i]);
