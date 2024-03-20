@@ -26,12 +26,12 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Used to normalize the adc inputs to values between -1 and 1
 #define HALF_OF_MAX_ADC_VALUE 2047.5
-//
+// 
 #define MEDIAN_POWER_VALUE_INDEX 4
 #define FUDGE_FACTOR 50
 
 
-//
+// 
 typedef uint16_t detector_hitCount_t;
 
 
@@ -40,11 +40,11 @@ static uint64_t invocationCount;    // Number of times detector is called
 
 static bool ignoreAllHits;  // If true, ignore all hits
 static uint16_t frequencyNumberOfLastHit;   // Frequency of last hit
-//
+// 
 static const uint32_t FUDGE_FACTORS[FILTER_FREQUENCY_COUNT];    // Possible fudge factors
 static uint32_t fudge_factor_index; // Fudge factor array index
 static uint32_t fudge_factor;
-//
+// 
 static bool ignoredPlayerFrequencies[FILTER_FREQUENCY_COUNT];   // Ignored player frequencies
 static double powerValues[FILTER_FREQUENCY_COUNT];  // Unsorted power values
 static double powerValues_sorted[FILTER_FREQUENCY_COUNT];   // Sorted power values
@@ -109,15 +109,15 @@ static void swapInts(uint16_t* a, uint16_t* b) {
     *b = temp;
 }
 
-// Selection sort of an array
+// Selection sort of an array 
 static void selectionSort(double arr[], uint16_t indexes[], uint16_t size) {
     uint16_t i, j, max_idx;
-    //
+    // Iterate through size - 1
     for (i = 0; i < size - 1; i++) {
         max_idx = i;
-        //
+        // Iterate through size
         for (j = i + 1; j < size; j++) {
-            //
+            // Compare power values (currently in ascending order)
             if (arr[j] < arr[max_idx]) { // Change to > for descending order
                 max_idx = j;
             }
@@ -136,20 +136,11 @@ void detector_clearHit(void) {
 
 // Detect a hit
 bool detector_hitCurrentlyDetected() {
-    // printf("STARTING: detector_hitCurrentlyDetected\n");
+    // Optional debug statement
+    if (DEBUG_DETECTOR) printf("STARTING: detector_hitCurrentlyDetected\n");
 
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
-
-    // Optional debug statement
-    if (DEBUG_DETECTOR) 
-    // printf("PowerValues {");
-    // // Print out power values for debug
-    // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-    //     printf("%d", powerValues[i]);
-    //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
-    // }
-    // printf("}\n");
     
     // Sort the power values
     // 1) Copy the values to powerValues_sorted and reset playerFrequencies_sorted
@@ -163,7 +154,6 @@ bool detector_hitCurrentlyDetected() {
     // Calculate median power value and baseline power
     double powerValue_median = powerValues_sorted[MEDIAN_POWER_VALUE_INDEX];
     double base_line = powerValue_median * fudge_factor;
-    
 
     // Reset hitDetected;
     detector_clearHit();
@@ -174,26 +164,28 @@ bool detector_hitCurrentlyDetected() {
             // If the power value is greater than the base_line...
             if (powerValues_sorted[i] > base_line) {
                 // Register the hit where needed
-                //    printf("Oh hey we got a hit\n");
                 detector_hitDetectedFlag = true;
                 frequencyNumberOfLastHit = playerFrequencies_sorted[i];
                 detectorHitArray[playerFrequencies_sorted[i]] += 1;
 
-                // // ???
-                // printf("detectorHitArray {");
-                // // Print out power values for debug
-                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-                //     printf("%d", detectorHitArray[i]);
-                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
-                // }
-                // printf("}\n");
+                // Optional debug statement
+                if (DEBUG_DETECTOR) {
+                    printf("detectorHitArray {");
+                    // Print out power values for debug
+                    for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                        printf("%d", detectorHitArray[i]);
+                        printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                    }
+                    printf("}\n");
+                }
 
                 return detector_hitDetectedFlag;
             }
         }
     }
 
-    // printf("TERMINATING: detector_hitCurrentlyDetected()\n");
+    // Optional debug statement
+    if (DEBUG_DETECTOR) printf("TERMINATING: detector_hitCurrentlyDetected()\n");
     return detector_hitDetectedFlag;
 }
 
@@ -255,7 +247,6 @@ void detector(bool interruptsCurrentlyEnabled){
    // Increment the invocation count
    invocationCount++;
 
-    // printf("Buffer Elmements: %d\n", buffer_elements());
    // Query the ADC buffer to determine how many elements it contains.
    uint32_t elementCount = buffer_elements();
    static uint32_t invoke_filter = 0;
@@ -280,7 +271,7 @@ void detector(bool interruptsCurrentlyEnabled){
            if (invoke_filter == FILTER_FREQUENCY_COUNT){
                invoke_filter = 0;
                filter_firFilter();
-               //
+               // Iterate through filters for each frequency
                for (int32_t filterNumber = 0; filterNumber < FILTER_FREQUENCY_COUNT; filterNumber++) {
                     filter_iirFilter(filterNumber); // Run each of the IIR filters.
                     // Compute the power for each of the filters, at lowest computational cost.
@@ -289,13 +280,16 @@ void detector(bool interruptsCurrentlyEnabled){
                     filter_computePower(filterNumber, false, false);
                 }
 
-                // printf("PowerValues {");
-                // // Print out power values for debug
-                // for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-                //     printf("%d", powerValues[i]);
-                //     printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
-                // }
-                // printf("}\n");
+                // Optional debug statement
+                if (DEBUG_DETECTOR) {
+                    printf("PowerValues {");
+                    // Print out power values for debug
+                    for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+                        printf("%d", powerValues[i]);
+                        printf((i < FILTER_FREQUENCY_COUNT - 1 ? "," : ""));
+                    }
+                    printf("}\n");
+                }
 
                // if the lockoutTimer is not running, run the hit-detection algorithm...
                if (lockoutTimer_running() == false) {
@@ -307,7 +301,6 @@ void detector(bool interruptsCurrentlyEnabled){
                         lockoutTimer_start();   // Start lockoutTimer
                         hitLedTimer_enable();   // Start hitLedTimer (line 1)
                         hitLedTimer_start();    // Start hitLedTimer (line 2)
-                       
                        
                    }
                }
@@ -330,32 +323,39 @@ void detector_runTest(void) {
     printf("STARTING: Detector_runTest()\n");
     detector_init();
     
-    // 
+    //  Set ignored frequencies
     bool ignored_frequencies[FILTER_FREQUENCY_COUNT] = {false};
+    detector_setIgnoredFrequencies(ignored_frequencies);
 
-    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {100, 20, 3000, 400, 500, 60, 70, 80, 2000, 15};
-    // 
+
+    uint32_t power_Values[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15};
+    // Populate current power values
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values[i]);
     }
-    // 
-    detector_setIgnoredFrequencies(ignored_frequencies);
-    
-    // 
+    // Print out result
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-    else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
+    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
   
+
     uint32_t power_Values2[FILTER_FREQUENCY_COUNT] = {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15};
-    // 
+    // Populate current power values
     for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
         filter_setCurrentPowerValue(i, power_Values2[i]);
     }
-    // 
-    detector_setIgnoredFrequencies(ignored_frequencies);
-    
-    // 
+    // Print out result
     if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
-    else printf("Hit Detected: %d\n", detector_hitDetectedFlag);
+    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
+
+    uint32_t power_Values3[FILTER_FREQUENCY_COUNT] = {10, 20, 30, 40, 20, 60, 70, 80, 100, 1500};
+    // Populate current power values
+    for(int i = 0; i < FILTER_FREQUENCY_COUNT; i++){
+        filter_setCurrentPowerValue(i, power_Values3[i]);
+    }
+    // Print out result
+    if (detector_hitCurrentlyDetected()) printf("Hit detected at Frequency %d\n", frequencyNumberOfLastHit);
+    else printf("Hit Detected (True or False): %d\n", detector_hitDetectedFlag);
+
 
     printf("TERMINATING: Detector_runTest()\n");
 };

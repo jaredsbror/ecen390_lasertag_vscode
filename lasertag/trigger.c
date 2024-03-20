@@ -17,7 +17,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "transmitter.h"
 
 // Uncomment for debug prints
-#define DEBUG_SINGLE_LETTER_PRINTOUTS true  // Single letter debug messages
+#define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
 #define DEBUG_TRIGGER false  // If true, debug messages enabled
 
 // The trigger state machine debounces both the press and release of gun
