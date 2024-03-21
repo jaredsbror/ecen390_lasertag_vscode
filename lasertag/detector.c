@@ -44,7 +44,7 @@ static uint64_t invocationCount;    // Number of times detector is called
 
 static bool ignoreAllHits;  // If true, ignore all hits
 static uint16_t frequencyNumberOfLastHit;   // Frequency of last hit
-/
+
 static const uint32_t FUDGE_FACTORS[FILTER_FREQUENCY_COUNT];    // Possible fudge factors
 static uint32_t fudge_factor_index; // Fudge factor array index
 static uint32_t fudge_factor; // this is our fudge factor, but this is so we can modify the fudge factor later and iterate through.

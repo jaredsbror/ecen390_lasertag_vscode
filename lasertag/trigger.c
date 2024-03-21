@@ -45,6 +45,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // trigger_tick() must be invoked in isr_function() and nowhere else. Pass-off points will be 
 // subtracted if trigger_tick() is invoked anywhere else.
 
+#define TRIGGER_GUN_TRIGGER_MIO_PIN 10     // JF2 (pg. 25 of ZYBO reference manual).
+
 // Debouncing values
 #define TRIGGER_DEBOUNCE_PRESS_DELAY 50 // ticks, 50 ms
 #define TRIGGER_DEBOUNCE_RELEASE_DELAY 50 // ticks, 50 ms
@@ -71,10 +73,11 @@ static enum trigger_st_st currentState;
 // Global variables
 volatile static trigger_shotsRemaining_t shotsRemaining;
 volatile static uint32_t tickCount;
-volatile static bool buttonZeroPressed;
 volatile static bool enable;
 volatile static bool pressConfirmed;
 volatile static bool releaseConfirmed;
+volatile static bool ignoreGunInput; 
+
 
 // This is a debug state print routine. It will print the names of the states each
 // time tick() is called. It only prints states if they are different than the
@@ -112,12 +115,12 @@ static void debugStatePrint() {
   }
 }
 
-// // Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
-// // Gun input is ignored if the gun-input is high when the init() function is invoked.
-// bool triggerPressed() {
-// 	return ((!IGNORE_GUN_INPUT & (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == GUN_TRIGGER_PRESSED)) || 
-//                 (buttons_read() & BUTTONS_BTN0_MASK));
-// }
+// Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
+// Gun input is ignored if the gun-input is high when the init() function is invoked.
+bool triggerPressed() {
+	return ((!ignoreGunInput && (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == 1)) || 
+                (buttons_read() & BUTTONS_BTN0_MASK));
+}
 
 // Init trigger data-structures.
 // Initializes the mio subsystem.
@@ -128,16 +131,18 @@ void trigger_init() {
 
     // Init hardware
     buttons_init();
-    // mio_setPinAsInput(TRIGGER_GUN_TRIGGER_MIO_PIN);
-    // // If the trigger is pressed when trigger_init() is called, assume that the gun is not connected and ignore it.
-    // if (triggerPressed()) {
-    //     ignoreGunInput = true;
-    // }
+
+
+    ignoreGunInput = false;
+    mio_setPinAsInput(TRIGGER_GUN_TRIGGER_MIO_PIN);
+    // If the trigger is pressed when trigger_init() is called, assume that the gun is not connected and ignore it.
+    if (triggerPressed()) {
+        ignoreGunInput = true;
+    }
 
     // Set variables
     shotsRemaining = 0;
     tickCount = 0;
-    buttonZeroPressed = false;
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
@@ -153,9 +158,6 @@ void trigger_tick() {
     // Optional debug messages
     if (DEBUG_TRIGGER) debugStatePrint();
 
-    // Read current buttons to find button 0
-    buttonZeroPressed = (buttons_read() & BUTTONS_BTN0_MASK);
-
      // Perform state update
     switch(currentState) {
         case INIT_ST:
@@ -165,7 +167,7 @@ void trigger_tick() {
 
         case WAIT_FOR_PRESS_ST:
             // If a press is detected and machine is enabled, transition to MAYBE_PRESSED_ST
-            if (enable && buttonZeroPressed) {
+            if (enable && triggerPressed()) {
                 currentState = MAYBE_PRESSED_ST;    // Transition
                 // Set variables
                 tickCount = 0;
@@ -176,7 +178,7 @@ void trigger_tick() {
 
         case MAYBE_PRESSED_ST:
             // If BTN0 is not pressed, return to WAIT_FOR_PRESS_ST
-            if (!buttonZeroPressed) {
+            if (!triggerPressed()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // Else if tickcount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
             } else if (tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) {
@@ -193,7 +195,7 @@ void trigger_tick() {
 
         case WAIT_FOR_RELEASE_ST:
             // If BTN0 is not pressed, continue to MAYBE_RELEASED_ST
-            if (!buttonZeroPressed) {
+            if (!triggerPressed()) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
                 tickCount = 0;  // Set variables
             }
@@ -201,7 +203,7 @@ void trigger_tick() {
 
         case MAYBE_RELEASED_ST:
             // If BTN0 is pressed, return to WAIT_FOR_RELEASE_ST
-            if (buttonZeroPressed) {
+            if (triggerPressed()) {
                 currentState = WAIT_FOR_RELEASE_ST;
             // Else If tickcount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
             } else if (tickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
