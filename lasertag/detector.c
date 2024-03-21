@@ -19,6 +19,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "lockoutTimer.h"
 #include "hitLedTimer.h"
 #include "utils.h"
+#include "buttons.h"
+#include "leds.h"
 
 
 #define DEBUG_DETECTOR false
@@ -28,7 +30,10 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define HALF_OF_MAX_ADC_VALUE 2047.5
 // 
 #define MEDIAN_POWER_VALUE_INDEX 4
-#define FUDGE_FACTOR 50
+#define FUDGE_FACTOR 200
+#define FUDGE_FACTORS {10, 25, 50, 100, 200, 500, 750, 1000}
+#define FUDGE_FACTORS_SIZE 8
+#define FUDGE_FACTOR_LED_MASK 0x0000000f
 
 #define QUEUE_1 {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15}
 #define QUEUE_2  {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15}
@@ -45,7 +50,7 @@ static uint64_t invocationCount;    // Number of times detector is called
 static bool ignoreAllHits;  // If true, ignore all hits
 static uint16_t frequencyNumberOfLastHit;   // Frequency of last hit
 
-static const uint32_t FUDGE_FACTORS[FILTER_FREQUENCY_COUNT];    // Possible fudge factors
+static const uint32_t fudgeFactors[FUDGE_FACTORS_SIZE] = FUDGE_FACTORS;    // Possible fudge factors
 static uint32_t fudge_factor_index; // Fudge factor array index
 static uint32_t fudge_factor; // this is our fudge factor, but this is so we can modify the fudge factor later and iterate through.
 
@@ -62,6 +67,10 @@ static bool detector_hitDetectedFlag;   // Hit detected
 // By default, all frequencies are considered for hits.
 // Assumes the filter module is initialized previously.
 void detector_init(void) {
+
+    // Init leds
+    // leds_init(false);
+
    // Reset booleans
    ignoreAllHits = false;
    detector_hitDetectedFlag = false;
@@ -145,6 +154,7 @@ bool detector_hitCurrentlyDetected() {
 
     // Get current power values
     filter_getCurrentPowerValues(powerValues);
+
     
     // Sort the power values
     // 1) Copy the values to powerValues_sorted and reset playerFrequencies_sorted
@@ -157,6 +167,7 @@ bool detector_hitCurrentlyDetected() {
 
     // Calculate median power value and baseline power
     double powerValue_median = powerValues_sorted[MEDIAN_POWER_VALUE_INDEX];
+    // fudge_factor = fudgeFactors[fudge_factor_index];
     double base_line = powerValue_median * fudge_factor;
 
     // Reset hitDetected;
@@ -254,6 +265,17 @@ void detector(bool interruptsCurrentlyEnabled){
    // Query the ADC buffer to determine how many elements it contains.
    uint32_t elementCount = buffer_elements();
    static uint32_t invoke_filter = 0;
+
+//    // Update fudge factors
+//     if ((buttons_read() & BUTTONS_BTN1_MASK)) {
+//         fudge_factor_index = (fudge_factor_index++) % FUDGE_FACTORS_SIZE;
+
+//         uint32_t ledValue = fudge_factor_index << 1;
+//         leds_write(ledValue);
+
+//         // uint32_t fudgeFactorLeds = (fudge_factor_index << 1) & FUDGE_FACTOR_LED_MASK ;
+//         // leds_write(fudgeFactorLeds);
+//     }
 
 
    // Repeat the following steps elementCount times

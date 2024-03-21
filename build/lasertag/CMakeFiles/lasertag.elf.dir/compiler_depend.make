@@ -74,7 +74,9 @@ lasertag/CMakeFiles/lasertag.elf.dir/detector.c.o: ../lasertag/detector.c \
   ../lasertag/queue.h \
   ../lasertag/lockoutTimer.h \
   ../lasertag/hitLedTimer.h \
-  ../include/utils.h
+  ../include/utils.h \
+  ../drivers/buttons.h \
+  ../include/leds.h
 
 lasertag/CMakeFiles/lasertag.elf.dir/filter.c.o: ../lasertag/filter.c \
   ../lasertag/filter.h \
@@ -512,13 +514,13 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 
 ../lasertag/lockoutTimer.h:
 
-../lasertag/hitLedTimer.c:
-
-../lasertag/filter.c:
+../drivers/buttons.h:
 
 ../include/leds.h:
 
-../drivers/buttons.h:
+../lasertag/hitLedTimer.c:
+
+../lasertag/filter.c:
 
 ../include/utils.h:
 

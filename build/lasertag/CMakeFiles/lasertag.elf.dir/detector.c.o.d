@@ -25,4 +25,6 @@ lasertag/CMakeFiles/lasertag.elf.dir/detector.c.o: \
  /auto/fsd/jcrook12/ecen390/lasertag/queue.h \
  /auto/fsd/jcrook12/ecen390/lasertag/lockoutTimer.h \
  /auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.h \
- /auto/fsd/jcrook12/ecen390/include/utils.h
+ /auto/fsd/jcrook12/ecen390/include/utils.h \
+ /auto/fsd/jcrook12/ecen390/drivers/buttons.h \
+ /auto/fsd/jcrook12/ecen390/include/leds.h
