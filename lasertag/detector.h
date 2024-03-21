@@ -64,6 +64,9 @@ void detector_getHitCounts(detector_hitCount_t hitArray[]);
 // The actual values for fudge-factors is stored in an array found in detector.c
 void detector_setFudgeFactorIndex(uint32_t factorIdx);
 
+// Get the fudge facter externally
+uint32_t getFudgeFactorIndex(void);
+
 // Returns the detector invocation count.
 // The count is incremented each time detector is called.
 // Used for run-time statistics.

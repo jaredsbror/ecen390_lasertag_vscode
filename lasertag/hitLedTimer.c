@@ -15,6 +15,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "mio.h"
 #include "utils.h"
 #include "buttons.h"
+#include "detector.h"
 
 #define DEBUG_HIT_LED_TIMER false  // If true, debug messages enabled
 
@@ -184,13 +185,31 @@ bool hitLedTimer_running() {
 // Turns the gun's hit-LED on.
 void hitLedTimer_turnLedOn() {
     mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_HIGH); // Write a '1' to JF-3.
-    leds_write(HIT_LED_TIMER_LED_LD0_HIGH);
+
+    uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
+
+    // Define a mask with only bit0 set to 1
+    uint32_t mask = 1; // 0x1
+
+    // Clear bit0 and set the new value (1)
+    uint32_t new_led_value = (current_led_value & ~mask) | 1;
+    
+    leds_write(new_led_value);
 };
 
 // Turns the gun's hit-LED off.
 void hitLedTimer_turnLedOff() {
     mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_LOW); // Write a '0' to JF-3.
-    leds_write(HIT_LED_TIMER_LED_LD0_LOW);
+
+    uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
+
+    // Define a mask with only bit0 set to 1
+    uint32_t mask = 1; // 0x1
+
+    // Clear bit0 and set the new value (1)
+    uint32_t new_led_value = (current_led_value & ~mask) | 0;
+    
+    leds_write(new_led_value);
 };
 
 // Disables the hitLedTimer.

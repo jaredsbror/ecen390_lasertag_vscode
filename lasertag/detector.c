@@ -21,6 +21,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "utils.h"
 #include "buttons.h"
 #include "leds.h"
+#include "switches.h"
 
 
 #define DEBUG_DETECTOR false
@@ -33,7 +34,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define FUDGE_FACTOR 200
 #define FUDGE_FACTORS {10, 25, 50, 100, 200, 500, 750, 1000}
 #define FUDGE_FACTORS_SIZE 8
-#define FUDGE_FACTOR_LED_MASK 0x0000000f
+#define FUDGE_FACTOR_SWITCH_MASK 0x0000000e
+#define FUDGE_FACTOR_DEFAULT_INDEX 4
 
 #define QUEUE_1 {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15}
 #define QUEUE_2  {10, 20, 3000, 40, 500, 60, 70, 80, 10, 15}
@@ -77,7 +79,7 @@ void detector_init(void) {
 
 
    // Reset numbers
-   fudge_factor_index = 0;
+   fudge_factor_index = FUDGE_FACTOR_DEFAULT_INDEX;
    invocationCount = 0;
    frequencyNumberOfLastHit = 0;
    fudge_factor = FUDGE_FACTOR;
@@ -167,7 +169,7 @@ bool detector_hitCurrentlyDetected() {
 
     // Calculate median power value and baseline power
     double powerValue_median = powerValues_sorted[MEDIAN_POWER_VALUE_INDEX];
-    // fudge_factor = fudgeFactors[fudge_factor_index];
+    fudge_factor = fudgeFactors[fudge_factor_index];
     double base_line = powerValue_median * fudge_factor;
 
     // Reset hitDetected;
@@ -241,6 +243,11 @@ void detector_setFudgeFactorIndex(uint32_t factorIdx) {
    fudge_factor_index = factorIdx;
 };
 
+// Get the fudge facter externally
+uint32_t getFudgeFactorIndex() {
+    return fudge_factor_index;
+}
+
 
 // Returns the detector invocation count.
 // The count is incremented each time detector is called.
@@ -266,16 +273,15 @@ void detector(bool interruptsCurrentlyEnabled){
    uint32_t elementCount = buffer_elements();
    static uint32_t invoke_filter = 0;
 
-//    // Update fudge factors
-//     if ((buttons_read() & BUTTONS_BTN1_MASK)) {
-//         fudge_factor_index = (fudge_factor_index++) % FUDGE_FACTORS_SIZE;
+   // Update fudge factors
+    if (buttons_read() & BUTTONS_BTN1_MASK) {
+        fudge_factor_index = (uint32_t) ((switches_read() & FUDGE_FACTOR_SWITCH_MASK) >> 1);
+        // printf("Fudge Factor Index %d produces Factor of %d\n", fudge_factor_index, fudgeFactors[fudge_factor_index]);
 
-//         uint32_t ledValue = fudge_factor_index << 1;
-//         leds_write(ledValue);
-
-//         // uint32_t fudgeFactorLeds = (fudge_factor_index << 1) & FUDGE_FACTOR_LED_MASK ;
-//         // leds_write(fudgeFactorLeds);
-//     }
+        uint32_t new_led_value = (uint32_t) (fudge_factor_index << 1);  // Your current 32-bit LED output value
+    
+        leds_write(new_led_value);
+    }
 
 
    // Repeat the following steps elementCount times

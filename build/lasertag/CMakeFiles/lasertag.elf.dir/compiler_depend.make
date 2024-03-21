@@ -76,7 +76,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/detector.c.o: ../lasertag/detector.c \
   ../lasertag/hitLedTimer.h \
   ../include/utils.h \
   ../drivers/buttons.h \
-  ../include/leds.h
+  ../include/leds.h \
+  ../drivers/switches.h
 
 lasertag/CMakeFiles/lasertag.elf.dir/filter.c.o: ../lasertag/filter.c \
   ../lasertag/filter.h \
@@ -150,7 +151,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o: ../lasertag/hitLedTimer.c 
   ../include/mio.h \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
   ../include/utils.h \
-  ../drivers/buttons.h
+  ../drivers/buttons.h \
+  ../lasertag/detector.h
 
 lasertag/CMakeFiles/lasertag.elf.dir/isr.c.o: ../lasertag/isr.c \
   ../lasertag/hitLedTimer.h \
@@ -424,8 +426,6 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 
 ../lasertag/queueTest.h:
 
-../drivers/switches.h:
-
 ../lasertag/sound/sound.h:
 
 ../lasertag/support/runningModes.h:
@@ -433,6 +433,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 ../lasertag/game.h:
 
 ../lasertag/support/filterTest.h:
+
+/usr/include/newlib/alloca.h:
 
 /usr/include/newlib/machine/types.h:
 
@@ -452,13 +454,13 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 
 ../lasertag/hitLedTimer.h:
 
-/usr/include/newlib/sys/timespec.h:
-
-../lasertag/support/bufferTest.h:
-
 /usr/include/newlib/sys/string.h:
 
 ../lasertag/detector.h:
+
+/usr/include/newlib/sys/timespec.h:
+
+../lasertag/support/bufferTest.h:
 
 /usr/include/newlib/sys/_stdint.h:
 
@@ -508,6 +510,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 
 ../lasertag/filter.h:
 
+../drivers/switches.h:
+
 /usr/include/newlib/machine/_types.h:
 
 ../lasertag/queue.h:
@@ -551,5 +555,3 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 /usr/include/newlib/assert.h:
 
 /usr/include/newlib/stdlib.h:
-
-/usr/include/newlib/alloca.h:
