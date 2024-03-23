@@ -185,10 +185,6 @@ void runningModes_initAll(void) {
 
 // Returns the current switch-setting
 uint16_t runningModes_getFrequencySetting(void) {
-
-  // Optional debug
-  // printf("Switches: %04X\n", switches_read() & 0xF);
-
   uint16_t switchSetting = switches_read() & 0xF; // Bit-mask the results.
   // Provide a nice default if the slide switches are in error.
   if (!(switchSetting < FILTER_FREQUENCY_COUNT))
@@ -301,7 +297,7 @@ void runningModes_shooter(void) {
                                                 // doing something.
     // Run filters, compute power, run hit-detection.
     detector(INTERRUPTS_CURRENTLY_ENABLED); // Interrupts are currently enabled.
-    if (detector_hitPreviouslyDetected()) {           // Hit detected
+    if (detector_hitCurrentlyDetected()) {           // Hit detected
       hitCount++;                           // increment the hit count.
       detector_clearHit();                  // Clear the hit.
       detector_hitCount_t
