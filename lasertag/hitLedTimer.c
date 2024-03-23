@@ -110,6 +110,57 @@ void hitLedTimer_init() {
     timer_enable = false;
 };
 
+// Calling this starts the timer.
+void hitLedTimer_start() {
+    hit = true;
+    // printf("Resuscitate LED's\n");
+};
+
+// Returns true if the timer is currently running.
+bool hitLedTimer_running() {
+    return ((currentState == HIT_DETECTED_ST) || hit);
+};
+
+// Turns the gun's hit-LED on.
+void hitLedTimer_turnLedOn() {
+    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_HIGH); // Write a '1' to JF-3.
+
+    // uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
+
+    // Define a mask with only bit0 set to 1
+    // uint32_t mask = 1; // 0x1
+
+    // Clear bit0 and set the new value (1)
+    // uint32_t new_led_value = (current_led_value & ~mask) | 1;
+    
+    // leds_write(1);
+};
+
+// Turns the gun's hit-LED off.
+void hitLedTimer_turnLedOff() {
+    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_LOW); // Write a '0' to JF-3.
+
+    // uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
+
+    // Define a mask with only bit0 set to 1
+    // uint32_t mask = 1; // 0x1
+
+    // Clear bit0 and set the new value (1)
+    // uint32_t new_led_value = (current_led_value & ~mask) | 0;
+    
+    // leds_write(0);
+};
+
+// Disables the hitLedTimer.
+void hitLedTimer_disable() {
+    timer_enable = false;
+};
+
+// Enables the hitLedTimer.
+void hitLedTimer_enable() {
+    timer_enable = true;
+};
+
 // Standard tick function.
 void hitLedTimer_tick() {
     
@@ -171,56 +222,6 @@ void hitLedTimer_tick() {
     
 };
 
-// Calling this starts the timer.
-void hitLedTimer_start() {
-    hit = true;
-    // printf("Resuscitate LED's\n");
-};
-
-// Returns true if the timer is currently running.
-bool hitLedTimer_running() {
-    return ((currentState == HIT_DETECTED_ST) || hit);
-};
-
-// Turns the gun's hit-LED on.
-void hitLedTimer_turnLedOn() {
-    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_HIGH); // Write a '1' to JF-3.
-
-    // uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
-
-    // Define a mask with only bit0 set to 1
-    // uint32_t mask = 1; // 0x1
-
-    // Clear bit0 and set the new value (1)
-    // uint32_t new_led_value = (current_led_value & ~mask) | 1;
-    
-    // leds_write(1);
-};
-
-// Turns the gun's hit-LED off.
-void hitLedTimer_turnLedOff() {
-    mio_writePin(HIT_LED_TIMER_OUTPUT_PIN, HIT_LED_TIMER_LED_JF3_LOW); // Write a '0' to JF-3.
-
-    // uint32_t current_led_value = (uint32_t) (getFudgeFactorIndex() << 1);  // Your current 32-bit LED output value
-
-    // Define a mask with only bit0 set to 1
-    // uint32_t mask = 1; // 0x1
-
-    // Clear bit0 and set the new value (1)
-    // uint32_t new_led_value = (current_led_value & ~mask) | 0;
-    
-    // leds_write(0);
-};
-
-// Disables the hitLedTimer.
-void hitLedTimer_disable() {
-    timer_enable = false;
-};
-
-// Enables the hitLedTimer.
-void hitLedTimer_enable() {
-    timer_enable = true;
-};
 
 // Runs a visual test of the hit LED until BTN3 is pressed.
 // The test continuously blinks the hit-led on and off.

@@ -150,7 +150,7 @@ void lockoutTimer_start() {
 
 // Returns true if the timer is running.
 bool lockoutTimer_running() {
-    return ((currentState == ACTIVE_ST) || (active) || (startTimer));
+    return ((currentState == ACTIVE_ST) || active || startTimer);
 };
 
 // Test function assumes interrupts have been completely enabled and
