@@ -34,7 +34,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uncomment this code so that the code in the various modes will
 // ignore your own frequency. You still must properly implement
 // the ability to ignore frequencies in detector.c
-//#define IGNORE_OWN_FREQUENCY 1
+#define IGNORE_OWN_FREQUENCY 1
 
 #define MAX_HIT_COUNT 100000
 
@@ -297,7 +297,7 @@ void runningModes_shooter(void) {
                                                 // doing something.
     // Run filters, compute power, run hit-detection.
     detector(INTERRUPTS_CURRENTLY_ENABLED); // Interrupts are currently enabled.
-    if (detector_hitCurrentlyDetected()) {           // Hit detected
+    if (detector_hitPreviouslyDetected()) {           // Hit detected
       hitCount++;                           // increment the hit count.
       detector_clearHit();                  // Clear the hit.
       detector_hitCount_t
