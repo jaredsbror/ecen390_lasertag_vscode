@@ -176,6 +176,7 @@ void transmitter_tick() {
             if (transmitterTick > TRANSMITTER_PULSE_WIDTH) {
                 currentState = INACTIVE_ST;
                 transmitterTick = 0;
+                transmitter_set_jf1_to_zero();
             // Transition to off state depending on frequency
             } else if((transmitterTick % frequencyTicks) == 0) {
                 currentState = OFF_ST;
