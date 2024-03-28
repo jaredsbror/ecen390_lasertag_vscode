@@ -62,11 +62,6 @@ static uint32_t currentLifeCount;
 static bool isGameOver;
 static bool iAmInvincible;
 
-// Return true if the game is over
-bool game_isGameOver() {
-  return isGameOver;
-}
-
 static void I_Am_Invincible() {
   utils_msDelay(INVINCIBLE_DELAY_MS);
   detector_ignoreAllHits(true);

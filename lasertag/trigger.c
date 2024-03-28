@@ -65,21 +65,24 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // State machine states
 enum trigger_st_st {
-    INIT_ST,                // 
-    WAIT_FOR_PRESS_ST,      // 
-    MAYBE_PRESSED_ST,       // 
-    WAIT_FOR_RELEASE_ST,    // 
-    MAYBE_RELEASED_ST,      // 
+    INIT_ST,                // Initialize the machine
+    WAIT_FOR_PRESS_ST,      // Waiting to be pressed
+    MAYBE_PRESSED_ST,       // Waiting a certain time period to confirm button press
+    WAIT_FOR_RELEASE_ST,    // Waiting to be released
+    MAYBE_RELEASED_ST,      // Waiting a certain time period to confirm button release
 };
 static enum trigger_st_st currentState;
 
 // Global variables
-volatile static trigger_shotsRemaining_t shotsRemaining;
-volatile static uint32_t tickCount;
-volatile static bool enable;
-volatile static bool pressConfirmed;
-volatile static bool releaseConfirmed;
-volatile static bool ignoreGunInput; 
+// Numbers
+volatile static trigger_shotsRemaining_t shotsRemaining;    // Remaining shots
+volatile static uint32_t mainTickCount; // Main tick count (used for half second trigger delay until next shot)
+volatile static uint32_t reloadTickCount; // Reload tick count (used to measure three second reload delay)
+// Booleans
+volatile static bool enable;    // Enable trigger SM
+volatile static bool pressConfirmed;    // Confirm a press
+volatile static bool releaseConfirmed;  // Confirm a release
+volatile static bool ignoreGunInput;    // Ignore gun trigger input
 
 
 
@@ -119,6 +122,21 @@ static void debugStatePrint() {
   }
 }
 
+// Returns the number of remaining shots.
+trigger_shotsRemaining_t trigger_getRemainingShotCount() {
+    return shotsRemaining;
+};
+
+// Sets the number of remaining shots.
+void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
+    shotsRemaining = count;
+};
+
+// Reload gun with max bullets in clip
+static void trigger_reload() {
+    trigger_setRemainingShotCount(SHOT_MAX);
+}
+
 // Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
 // Gun input is ignored if the gun-input is high when the init() function is invoked.
 bool triggerPressed() {
@@ -146,7 +164,7 @@ void trigger_init() {
     }
 
     // Set variables
-    tickCount = 0;
+    mainTickCount = 0;
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
@@ -184,7 +202,7 @@ void trigger_tick(void) {
             if (enable && triggerPressed()) {
                 currentState = MAYBE_PRESSED_ST;    // Transition
                 // Set variables
-                tickCount = 0;
+                mainTickCount = 0;
                 pressConfirmed = false;
                 releaseConfirmed = false;
             }
@@ -194,10 +212,10 @@ void trigger_tick(void) {
             // If BTN0 is not pressed, return to WAIT_FOR_PRESS_ST
             if (!triggerPressed()) {
                 currentState = WAIT_FOR_PRESS_ST;
-            // Else if tickcount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
-            } else if ((tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY)&&(shotsRemaining != 0)) {
+            // Else if mainTickCount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
+            } else if ((mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY)&&(shotsRemaining != 0)) {
                 currentState = WAIT_FOR_RELEASE_ST;
-                tickCount = 0;
+                mainTickCount = 0;
                 pressConfirmed = true;
                 releaseConfirmed = false;
                 // Run the transmitter
@@ -206,7 +224,7 @@ void trigger_tick(void) {
                 // Print out char
                 if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
             }
-            else if ( (tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) && (shotsRemaining == 0) )
+            else if ( (mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) && (shotsRemaining == 0) )
             {
                 out();
             }
@@ -216,7 +234,7 @@ void trigger_tick(void) {
             // If BTN0 is not pressed, continue to MAYBE_RELEASED_ST
             if (!triggerPressed()) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
-                tickCount = 0;  // Set variables
+                mainTickCount = 0;  // Set variables
             }
             break;
 
@@ -224,10 +242,10 @@ void trigger_tick(void) {
             // If BTN0 is pressed, return to WAIT_FOR_RELEASE_ST
             if (triggerPressed()) {
                 currentState = WAIT_FOR_RELEASE_ST;
-            // Else If tickcount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
-            } else if (tickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
+            // Else If mainTickCount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
+            } else if (mainTickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
                 currentState = WAIT_FOR_PRESS_ST;
-                tickCount = 0;
+                mainTickCount = 0;
                 pressConfirmed = false;
                 releaseConfirmed = true;
                 // Print out char
@@ -252,7 +270,7 @@ void trigger_tick(void) {
             break;
         case MAYBE_PRESSED_ST:
             // Increment tick counter
-            tickCount++;
+            mainTickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
             if(shotsRemaining == 0){
@@ -261,7 +279,7 @@ void trigger_tick(void) {
             break;
         case MAYBE_RELEASED_ST:
             // Increment tick counter
-            tickCount++;
+            mainTickCount++;
             break;
         default:
             // Error message here
@@ -280,16 +298,6 @@ void trigger_enable() {
 // Disable the trigger state machine so that trigger presses are ignored.
 void trigger_disable() {
     enable = false;
-};
-
-// Returns the number of remaining shots.
-trigger_shotsRemaining_t trigger_getRemainingShotCount() {
-    return shotsRemaining;
-};
-
-// Sets the number of remaining shots.
-void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
-    shotsRemaining = count;
 };
 
 // Runs the test continuously until BTN3 is pressed.
