@@ -69,6 +69,9 @@ bool game_isGameOver() {
 
 static void I_Am_Invincible() {
   utils_msDelay(INVINCIBLE_DELAY_MS);
+  detector_ignoreAllHits(true);
+  detector(true);
+  detector_ignoreAllHits(false);
 };
 
 // This game supports two teams, Team-A and Team-B.
@@ -83,7 +86,7 @@ static void I_Am_Invincible() {
 void game_twoTeamTag(void) {
 
   runningModes_initAll();
-  sound_setVolume(sound_mediumHighVolume_e);
+  sound_setVolume(sound_minimumVolume_e);
 
   // Initialize global variables
   hitCount = INITIAL_HIT_COUNT;
