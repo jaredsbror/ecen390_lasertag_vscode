@@ -61,7 +61,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define MAYBE_RELEASED_ST_MSG "maybe released state\n"
 #define TRIGGER_UNKNOWN_ST_MSG "ERROR: Unknown state in Trigger\n"
 
-#define SHOT_MAX 10
+#define SHOT_COUNT_MAX 10
 #define TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS 300000
 #define TRIGGER_RELOAD_MANUAL_DELAY_TICKS 300000
 
@@ -153,7 +153,7 @@ void trigger_init() {
     buttons_init();
 
     // Load the gun
-    trigger_setRemainingShotCount(SHOT_MAX);
+    trigger_setRemainingShotCount(SHOT_COUNT_MAX);
 
     // Determine whether to ignore gun trigger input or just use BTN0
     ignoreGunInput = false;
@@ -187,9 +187,10 @@ static void trigger_fire(void){
 }
 
 // Reload gun with max bullets in clip
-static void trigger_reload() {
-    trigger_setRemainingShotCount(SHOT_MAX);
+static void trigger_reload(bool isAutomatic) {
+    trigger_setRemainingShotCount(SHOT_COUNT_MAX);
     sound_playSound(sound_gunReload_e);
+    printf(isAutomatic ? "AUTOMATIC " : "MANUAL ");
     printf("RELOAD\n");
 }
 
@@ -219,11 +220,11 @@ void trigger_tick(void) {
                 pressConfirmed = false;
                 releaseConfirmed = false;
             }
-            else if ((reload_ticks_automatic >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) && (shotsRemaining == 0)) {
+            else if (reload_ticks_automatic >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) {
                 // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
-                trigger_reload();
+                trigger_reload(true);
             }
             break;
 
@@ -232,33 +233,27 @@ void trigger_tick(void) {
             if (!triggerPressed()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // Else if mainTickCount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
-            } else if ((mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) && (shotsRemaining != 0)) {
-                currentState = WAIT_FOR_RELEASE_ST;
-                mainTickCount = 0;
+            } else if (mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) {
+
+                currentState = WAIT_FOR_RELEASE_ST; // Transition to next state
+                
+                // Change button booleans
                 pressConfirmed = true;
                 releaseConfirmed = false;
                 // Run the transmitter
                 transmitter_run();
-                trigger_fire();
-
-                // Reset reload tick counts
-                reload_ticks_automatic = 0;
-                reload_ticks_manual = 0;
-                // Print out char
-                if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
-            }
-            else if ( (mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) && (shotsRemaining == 0) )
-            {
-                currentState = WAIT_FOR_RELEASE_ST;
+                
+                // Sound depends on shots remaining
+                if (shotsRemaining != 0) {
+                    trigger_fire();
+                } else {
+                    trigger_outOfAmmo();
+                }
+                
+                // Reset tick counts
                 mainTickCount = 0;
-                pressConfirmed = true;
-                releaseConfirmed = false;
-                trigger_outOfAmmo();
-
-                // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
-
                 // Print out char
                 if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
             }
@@ -274,7 +269,7 @@ void trigger_tick(void) {
                 // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
-                trigger_reload();
+                trigger_reload(false);
             }
             break;
 
