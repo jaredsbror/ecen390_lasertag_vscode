@@ -74,7 +74,7 @@ CMakeFiles/BOOT.bin: lasertag/lasertag.elf
 	echo ' ../platforms/hw/330_hw_system.bit' >> conf.bif
 	echo ' ./lasertag/lasertag.elf' >> conf.bif
 	echo '}' >> conf.bif
-	/tools/Xilinx/Vivado/2023.1/bin/bootgen -image conf.bif -arch zynq -o BOOT.bin -w on
+	/tools/Xilinx/Bootgen/2022.2/bin/bootgen -image conf.bif -arch zynq -o BOOT.bin -w on
 
 BOOT.bin: CMakeFiles/BOOT.bin
 BOOT.bin: CMakeFiles/BOOT.bin.dir/build.make
