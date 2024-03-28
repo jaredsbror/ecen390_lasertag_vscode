@@ -43,13 +43,19 @@ The code in runningModes.c can be an example for implementing the game here.
 
 */
 // Frequencies
-#define IGNORE_OWN_FREQUENCY 1
+#define GAME_IGNORE_OWN_FREQUENCY 1
 #define FREQUENCY_6 6
 #define FREQUENCY_9 9
 // Hits and lives
 #define INITIAL_HIT_COUNT 0
 #define INITIAL_LIFE_COUNT 3
-#define HITS_PER_LIFE 5
+#define HIT_COUNT_PER_LIFE 5
+#define FIRST_LIFE 1
+#define SECOND_LIFE 2
+#define THIRD_LIFE 3
+#define FIRST_LIFE_HIT_COUNT 5
+#define SECOND_LIFE_HIT_COUNT 10
+#define THIRD_LIFE_HIT_COUNT 15
 // Delays
 #define FINAL_DELAY 3
 #define INVINCIBLE_DELAY_MS 5000
@@ -61,12 +67,24 @@ static uint32_t currentLifeCount;
 // Status effects
 static bool isGameOver;
 static bool iAmInvincible;
+// Ignored frequencies backup
+static bool backupIgnoreFrequencies[FILTER_FREQUENCY_COUNT];
 
 static void I_Am_Invincible() {
+  
+  // uint16_t previousHitCount = hitCount;
+
+  // Delay for 5 seconds and flush adc buffer
   utils_msDelay(INVINCIBLE_DELAY_MS);
   detector_ignoreAllHits(true);
   detector(true);
   detector_ignoreAllHits(false);
+
+  // Copy backup ignored frequencies to a detector array
+  detector_setIgnoredFrequencies(backupIgnoreFrequencies);
+
+  // Reset frequencies to ignore
+  detector_clearHit();
 };
 
 // This game supports two teams, Team-A and Team-B.
@@ -101,10 +119,16 @@ void game_twoTeamTag(void) {
     ignoredFrequencies[frequency] = ((frequency != FREQUENCY_6) && (frequency != FREQUENCY_9) ? true : false);
   }
 
-  #ifdef IGNORE_OWN_FREQUENCY
+  #ifdef GAME_IGNORE_OWN_FREQUENCY
     printf("Ignoring own frequency.\n");
     ignoredFrequencies[runningModes_getFrequencySetting()] = true;
   #endif
+
+  // Copy ignored frequencies to a backup array
+  for (uint32_t frequency = 0; frequency < FILTER_FREQUENCY_COUNT; frequency++) {
+    backupIgnoreFrequencies[frequency] = ignoredFrequencies[frequency];
+  }
+
   detector_setIgnoredFrequencies(ignoredFrequencies); // Set ignored frequencies
 
   printf("Ignored Frequencies(");
@@ -147,21 +171,24 @@ void game_twoTeamTag(void) {
       histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
 
       // Modify lifecount and determine if game is over
-      currentLifeCount = INITIAL_LIFE_COUNT - (hitCount / HITS_PER_LIFE);
-      isGameOver = (currentLifeCount == 0);
+      // if (hitCount == FIRST_LIFE_HIT_COUNT)
+      //   currentLifeCount = FIRST_LIFE;
+      // else if (hitCount == SECOND_LIFE_HIT_COUNT)
+      //   currentLifeCount = SECOND_LIFE;
+      // else if (hitCount == THIRD_LIFE_HIT_COUNT)
+      //   currentLifeCount = THIRD_LIFE;
+      // else
+      //   currentLifeCount = currentLifeCount;
+      currentLifeCount = INITIAL_LIFE_COUNT - (hitCount / HIT_COUNT_PER_LIFE);
 
-      // If the game is over...
-      if (isGameOver) {
-        // Transition outside of the while loop
-        sound_playSound(sound_gameOver_e);
-        printf("You lost a life!\n");
-        break;
-      } else if (currentLifeCount < prevousLifeCount) {  // Else check to see if a life has been lost...
+      // Check to see if a life has been lost...
+      if (currentLifeCount < prevousLifeCount) {
         // Trigger I AM INVINCIBLE for 5 seconds
         sound_playSound(sound_loseLife_e);
+        printf("You lost a life!\n");
         I_Am_Invincible();
         printf("I AM INVINCIBLE\n");
-      } else {
+      } else {  // Player was simply hit
         sound_playSound(sound_hit_e);
         printf("You were shot!\n");
       }
@@ -171,6 +198,12 @@ void game_twoTeamTag(void) {
     intervalTimer_stop(
         MAIN_CUMULATIVE_TIMER); // All done with actual processing.
   }
+
+  sound_playSound(sound_gameOver_e);
+  sound_waitForSoundToFinish();
+
+  sound_playSound(sound_returnToBase_e);
+  sound_waitForSoundToFinish();
 
 
 

@@ -19,7 +19,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 // Uncomment for debug prints
 #define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
-#define DEBUG_TRIGGER true  // If true, debug messages enabled
+#define DEBUG_TRIGGER false  // If true, debug messages enabled
 
 // The trigger state machine debounces both the press and release of gun
 // trigger. Ultimately, it will activate the transmitter when a debounced press
@@ -220,7 +220,7 @@ void trigger_tick(void) {
                 pressConfirmed = false;
                 releaseConfirmed = false;
             }
-            else if (reload_ticks_automatic >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) {
+            else if ((reload_ticks_automatic >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) && (shotsRemaining == 0)) {
                 // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
@@ -299,6 +299,7 @@ void trigger_tick(void) {
         case INIT_ST:
             break;
         case WAIT_FOR_PRESS_ST:
+            reload_ticks_manual++;
             if(shotsRemaining == 0){
                 reload_ticks_automatic++;
             }
@@ -308,6 +309,7 @@ void trigger_tick(void) {
             mainTickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
+            reload_ticks_manual++;
             if(shotsRemaining == 0){
                 reload_ticks_manual++;
             }

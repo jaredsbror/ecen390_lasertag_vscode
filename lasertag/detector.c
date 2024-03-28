@@ -307,11 +307,9 @@ void detector(bool interruptsCurrentlyEnabled){
                    // If you detect a hit and the frequency with maximum power is
                    // not an ignored frequency...
                    if (detector_hitCurrentlyDetected()) {
-                        
                         lockoutTimer_start();   // Start lockoutTimer
                         hitLedTimer_enable();   // Start hitLedTimer (line 1)
                         hitLedTimer_start();    // Start hitLedTimer (line 2)
-                       
                    }
                }
            }
