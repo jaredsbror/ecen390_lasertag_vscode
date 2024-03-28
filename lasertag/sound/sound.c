@@ -22,6 +22,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "xiicps.h"
 #include "xil_printf.h"
 #include "xil_types.h"
+#include "utils.h"
 
 /***************************************************************
  * Quite a bit of this code was obtained from digilent.com
@@ -121,8 +122,18 @@ sound_status_t sound_init() {
   // Initialize the silence array.
   for (uint32_t i = 0; i < ONE_SECOND_OF_SOUND_ARRAY_SIZE; i++)
     soundOfSilence[i] = NO_SOUND;
-  sound_setVolume(sound_minimumVolume_e); // Init the volume level.
+  sound_setVolume(sound_maximumVolume_e); // Init the volume level.
   return SOUND_STATUS_OK;
+}
+
+// Wait for the current sound to finish
+void sound_waitForSoundToFinish() {
+  // While loop
+  while (1) {
+    // If sound is NOT busy, break
+    if (!sound_isBusy())
+      break;
+  }
 }
 
 // This is a debug state print routine. It will print the names of the states
@@ -297,6 +308,7 @@ void sound_runTest() {
   printf("****************** sound_runTest() ******************\n");
 
   sound_init();
+  sound_setVolume(sound_mediumHighVolume_e);
   sound_tick();
   sound_setSound(sound_gunClick_e);
   printf("playing gunClick_e\n");

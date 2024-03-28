@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "hitledtimer.h": "c",
-        "lockouttimer.h": "c"
+        "lockouttimer.h": "c",
+        "utils.h": "c",
+        "xparameters.h": "c",
+        "histogram.h": "c",
+        "sound.h": "c"
     }
 }

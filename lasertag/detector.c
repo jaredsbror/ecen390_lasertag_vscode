@@ -28,7 +28,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define HALF_OF_MAX_ADC_VALUE 2047.5
 // 
 #define MEDIAN_POWER_VALUE_INDEX 4
-#define FUDGE_FACTOR 25
+#define FUDGE_FACTOR 50
 #define FUDGE_FACTOR_DEFAULT_INDEX 4
 
 #define QUEUE_1 {10, 20, 3000, 40, 50, 60, 70, 80, 2000, 15}

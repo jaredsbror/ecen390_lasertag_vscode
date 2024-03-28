@@ -10,6 +10,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/isr.c.o: \
  /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h \
  /auto/fsd/jcrook12/ecen390/lasertag/buffer.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/game.h \
  /auto/fsd/jcrook12/ecen390/lasertag/isr.h /usr/include/newlib/stdio.h \
  /usr/include/newlib/_ansi.h /usr/include/newlib/newlib.h \
  /usr/include/newlib/_newlib_version.h /usr/include/newlib/sys/config.h \

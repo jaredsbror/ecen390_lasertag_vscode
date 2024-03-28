@@ -15,6 +15,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "mio.h"
 #include "utils.h"
 #include "transmitter.h"
+#include "sound.h"
 
 // Uncomment for debug prints
 #define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
@@ -60,6 +61,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define MAYBE_RELEASED_ST_MSG "maybe released state\n"
 #define TRIGGER_UNKNOWN_ST_MSG "ERROR: Unknown state in Trigger\n"
 
+#define SHOT_MAX 10
+
 // State machine states
 enum trigger_st_st {
     INIT_ST,                // 
@@ -77,6 +80,7 @@ volatile static bool enable;
 volatile static bool pressConfirmed;
 volatile static bool releaseConfirmed;
 volatile static bool ignoreGunInput; 
+
 
 
 // This is a debug state print routine. It will print the names of the states each
@@ -132,6 +136,7 @@ void trigger_init() {
     // Init hardware
     buttons_init();
 
+    shotsRemaining = SHOT_MAX;
 
     ignoreGunInput = false;
     mio_setPinAsInput(TRIGGER_GUN_TRIGGER_MIO_PIN);
@@ -141,19 +146,28 @@ void trigger_init() {
     }
 
     // Set variables
-    shotsRemaining = 0;
     tickCount = 0;
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
 
-    // printf("I AM INITED\n");
+    
 };
 
+void out(void){
+    sound_playSound(sound_gunClick_e);
+}
+
+void lose_shot(void){
+    shotsRemaining--;
+    sound_playSound(sound_gunFire_e);
+}
+
+
 // Standard tick function.
-void trigger_tick() {
-    
-    // printf("Tick tock tick\n");
+void trigger_tick(void) {
+    static uint32_t reload_ticks_automatic;
+    static uint32_t reload_ticks_manual;
 
     // Optional debug messages
     if (DEBUG_TRIGGER) debugStatePrint();
@@ -181,15 +195,20 @@ void trigger_tick() {
             if (!triggerPressed()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // Else if tickcount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
-            } else if (tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) {
+            } else if ((tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY)&&(shotsRemaining != 0)) {
                 currentState = WAIT_FOR_RELEASE_ST;
                 tickCount = 0;
                 pressConfirmed = true;
                 releaseConfirmed = false;
                 // Run the transmitter
                 transmitter_run(); //??? Reactivate later
+                lose_shot();
                 // Print out char
                 if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
+            }
+            else if ( (tickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) && (shotsRemaining == 0) )
+            {
+                out();
             }
             break;
 
@@ -227,12 +246,18 @@ void trigger_tick() {
         case INIT_ST:
             break;
         case WAIT_FOR_PRESS_ST:
+            if(shotsRemaining == 0){
+                reload_ticks_automatic++;
+            }
             break;
         case MAYBE_PRESSED_ST:
             // Increment tick counter
             tickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
+            if(shotsRemaining == 0){
+                reload_ticks_manual++;
+            }
             break;
         case MAYBE_RELEASED_ST:
             // Increment tick counter

@@ -10,6 +10,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef GAME_H_
 #define GAME_H_
 
+// Return true if the game is over
+bool game_isGameOver();
+
 // This game supports two teams, Team-A and Team-B.
 // Each team operates on its own configurable frequency.
 // Each player has a fixed set of lives and once they

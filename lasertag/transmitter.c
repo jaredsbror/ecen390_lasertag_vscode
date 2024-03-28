@@ -7,6 +7,7 @@ source code for personal or educational use.
 For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 */
 
+#include "sound.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -37,6 +38,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define DIVIDE_BY_TWO 2
 
+#define SHOT_MAX 10
+
 // Global variables
 volatile static uint16_t frequency;     // Player number (index from o to 9 instead of 1 to 10)
 volatile static uint16_t newFrequency;  // Updated player number to be applied next cycle
@@ -45,6 +48,9 @@ volatile static uint16_t newFrequencyTicks; // Updated number of ticks for next 
 volatile static bool triggerPulled;     // Gun trigger pulled
 volatile static bool continuousMode;    // State machine should transmit continuously
 static bool on;     // Whether the state machine is active or not
+
+
+
  
 // State machine states
 enum transmitter_st_t {
@@ -124,6 +130,7 @@ void transmitter_init() {
     frequencyTicks = 0;
     newFrequencyTicks = 0;
 
+    
     // Boolean default values
     triggerPulled = false;
     continuousMode = false;
@@ -134,10 +141,13 @@ void transmitter_init() {
     // printf("initialized\n");
 };
 
+
+
 // Standard tick function.
 void transmitter_tick() {
     // Transmitter tick count
     static uint32_t transmitterTick;
+    
 
     
     // Optional debug messages
@@ -152,17 +162,19 @@ void transmitter_tick() {
         case INACTIVE_ST:
             // If trigger is pulled or continuous mode is active, turn on pulsing for 200 ms
             if(triggerPulled || continuousMode){
-                currentState = ON_ST;
-                // Reset variables for next 200ms pulse
-                on = true;
-                triggerPulled = false;
-                transmitterTick = 1;
-                // Update frequency and frequencyTicks values for next pulse
-                frequency = newFrequency;
-                frequencyTicks = newFrequencyTicks;
-                // Optional debug: printf("frequency = %d\n", frequency);
-                //Set JF1 pin to ON when transistion to ON_ST
-                transmitter_set_jf1_to_one();
+                    currentState = ON_ST;
+                    // Reset variables for next 200ms pulse
+                    on = true;
+                    triggerPulled = false;
+                    transmitterTick = 1;
+                    // Update frequency and frequencyTicks values for next pulse
+                    frequency = newFrequency;
+                    frequencyTicks = newFrequencyTicks;
+                    // Optional debug: printf("frequency = %d\n", frequency);
+                    //Set JF1 pin to ON when transistion to ON_ST
+                    transmitter_set_jf1_to_one();
+                    
+                
             } else{
                 // Set on to false
                 on = false;
@@ -216,6 +228,7 @@ void transmitter_tick() {
         case INIT_ST:
             break;
         case INACTIVE_ST:
+            
             break;
         case ON_ST:
             // Optional debug statement
@@ -359,3 +372,5 @@ void transmitter_runTestContinuous() {
     do {utils_msDelay(BOUNCE_DELAY);} while (buttons_read());
     printf("exiting transmitter_runTestNoncontinuous()\n");
 };
+
+

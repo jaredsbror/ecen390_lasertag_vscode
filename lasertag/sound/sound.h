@@ -48,6 +48,9 @@ typedef enum {
 // Must be called before using the sound state machine.
 sound_status_t sound_init();
 
+// Wait for the current sound to finish
+void sound_waitForSoundToFinish();
+
 // Standard tick function.
 void sound_tick();
 
@@ -59,6 +62,9 @@ bool sound_isBusy();
 
 // Returns true if the sound has finished playing.
 bool sound_isSoundComplete();
+
+// Wait for the current sound to finish
+void sound_waitUntilSoundFinished();
 
 // Use this to set the base address for the array containing sound data.
 // Allow sounds to be interrupted.

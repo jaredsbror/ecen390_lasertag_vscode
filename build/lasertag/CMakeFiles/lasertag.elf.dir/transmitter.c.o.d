@@ -1,5 +1,8 @@
 lasertag/CMakeFiles/lasertag.elf.dir/transmitter.c.o: \
  /auto/fsd/jcrook12/ecen390/lasertag/transmitter.c \
+ /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h \
+ /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
+ /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
  /usr/include/newlib/stdio.h /usr/include/newlib/_ansi.h \
  /usr/include/newlib/newlib.h /usr/include/newlib/_newlib_version.h \
  /usr/include/newlib/sys/config.h /usr/include/newlib/machine/ieeefp.h \
@@ -16,8 +19,6 @@ lasertag/CMakeFiles/lasertag.elf.dir/transmitter.c.o: \
  /usr/include/newlib/sys/timespec.h /usr/include/newlib/sys/_timespec.h \
  /usr/include/newlib/sys/_pthreadtypes.h /usr/include/newlib/sys/sched.h \
  /usr/include/newlib/machine/types.h /usr/include/newlib/sys/stdio.h \
- /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
- /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
  /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
  /auto/fsd/jcrook12/ecen390/lasertag/filter.h \
  /auto/fsd/jcrook12/ecen390/lasertag/queue.h \

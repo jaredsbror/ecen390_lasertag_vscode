@@ -23,4 +23,5 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: \
  /auto/fsd/jcrook12/ecen390/include/mio.h \
  /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
  /auto/fsd/jcrook12/ecen390/include/utils.h \
- /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h
+ /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h

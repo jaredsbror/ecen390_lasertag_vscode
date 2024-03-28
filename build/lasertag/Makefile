@@ -202,6 +202,30 @@ filter.c.s:
 	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/filter.c.s
 .PHONY : filter.c.s
 
+game.o: game.c.o
+.PHONY : game.o
+
+# target to build an object file
+game.c.o:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/game.c.o
+.PHONY : game.c.o
+
+game.i: game.c.i
+.PHONY : game.i
+
+# target to preprocess a source file
+game.c.i:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/game.c.i
+.PHONY : game.c.i
+
+game.s: game.c.s
+.PHONY : game.s
+
+# target to generate assembly for a file
+game.c.s:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/game.c.s
+.PHONY : game.c.s
+
 hitLedTimer.o: hitLedTimer.c.o
 .PHONY : hitLedTimer.o
 
@@ -388,6 +412,9 @@ help:
 	@echo "... filter.o"
 	@echo "... filter.i"
 	@echo "... filter.s"
+	@echo "... game.o"
+	@echo "... game.i"
+	@echo "... game.s"
 	@echo "... hitLedTimer.o"
 	@echo "... hitLedTimer.i"
 	@echo "... hitLedTimer.s"

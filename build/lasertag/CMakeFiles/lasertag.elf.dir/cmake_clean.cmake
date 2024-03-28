@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/lasertag.elf.dir/detector.c.o.d"
   "CMakeFiles/lasertag.elf.dir/filter.c.o"
   "CMakeFiles/lasertag.elf.dir/filter.c.o.d"
+  "CMakeFiles/lasertag.elf.dir/game.c.o"
+  "CMakeFiles/lasertag.elf.dir/game.c.o.d"
   "CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o"
   "CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o.d"
   "CMakeFiles/lasertag.elf.dir/isr.c.o"

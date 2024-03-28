@@ -45,4 +45,7 @@ void hitLedTimer_enable();
 // Depends on the interrupt handler to call tick function.
 void hitLedTimer_runTest();
 
+// Return true if the game is over
+bool hitLedTimer_returnGameOver();
+
 #endif /* HITLEDTIMER_H_ */

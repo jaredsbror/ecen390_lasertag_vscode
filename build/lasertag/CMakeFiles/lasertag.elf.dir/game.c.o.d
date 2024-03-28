@@ -16,9 +16,28 @@ lasertag/CMakeFiles/lasertag.elf.dir/game.c.o: \
  /usr/include/newlib/sys/timespec.h /usr/include/newlib/sys/_timespec.h \
  /usr/include/newlib/sys/_pthreadtypes.h /usr/include/newlib/sys/sched.h \
  /usr/include/newlib/machine/types.h /usr/include/newlib/sys/stdio.h \
- /auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
- /auto/fsd/jcrook12/ecen390/include/interrupts.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/buffer.h \
+ /auto/fsd/jcrook12/ecen390/drivers/buttons.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/detector.h \
+ /auto/fsd/jcrook12/ecen390/include/display.h \
+ /usr/include/newlib/stdlib.h /usr/include/newlib/machine/stdlib.h \
+ /usr/include/newlib/alloca.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/filter.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/queue.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/support/histogram.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.h \
+ /auto/fsd/jcrook12/ecen390/include/interrupts.h \
  /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
- /auto/fsd/jcrook12/ecen390/lasertag/support/runningModes.h
+ /auto/fsd/jcrook12/ecen390/drivers/intervalTimer.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/isr.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/lockoutTimer.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/support/runningModes.h \
+ /auto/fsd/jcrook12/ecen390/drivers/switches.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/trigger.h \
+ /auto/fsd/jcrook12/ecen390/include/utils.h \
+ /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h \
+ /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h

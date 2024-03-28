@@ -51,6 +51,7 @@ static uint32_t tickCounter;    // Tick counter
 static bool hit;    // A hit was detected
 static bool timer_enable;    // Timer is enabled
 
+
 /////////////////////
 // HELPER FUNCTIONS /
 /////////////////////
