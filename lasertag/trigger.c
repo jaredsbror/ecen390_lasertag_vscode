@@ -154,8 +154,10 @@ void trigger_init() {
     // Init hardware
     buttons_init();
 
-    shotsRemaining = SHOT_MAX;
+    // Load the gun
+    trigger_reload();
 
+    // Determine whether to ignore gun trigger input or just use BTN0
     ignoreGunInput = false;
     mio_setPinAsInput(TRIGGER_GUN_TRIGGER_MIO_PIN);
     // If the trigger is pressed when trigger_init() is called, assume that the gun is not connected and ignore it.
@@ -163,8 +165,9 @@ void trigger_init() {
         ignoreGunInput = true;
     }
 
-    // Set variables
+    // Set variables to default
     mainTickCount = 0;
+    reloadTickCount = 0;
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
