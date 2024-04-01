@@ -16,10 +16,12 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "utils.h"
 #include "transmitter.h"
 #include "sound.h"
+#include "invincibilityTimer.h"
 
 // Uncomment for debug prints
 #define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
 #define DEBUG_TRIGGER false  // If true, debug messages enabled
+#define DEBUG_RELOAD false
 
 // The trigger state machine debounces both the press and release of gun
 // trigger. Ultimately, it will activate the transmitter when a debounced press
@@ -175,7 +177,8 @@ void trigger_init() {
 
 static void trigger_outOfAmmo(void){
     sound_playSound(sound_gunClick_e);
-    printf("EMPTY\n");
+    // Optional global debug
+    if (DEBUG_RELOAD) printf("EMPTY\n");
 }
 
 static void trigger_fire(void){
@@ -183,15 +186,19 @@ static void trigger_fire(void){
     // If sound is not busy, play the sound
     // if (!sound_isBusy()) 
     sound_playSound(sound_gunFire_e);
-    printf("FIRE\n");
+    // Optional global debug
+    if (DEBUG_RELOAD) printf("FIRE\n");
 }
 
 // Reload gun with max bullets in clip
 static void trigger_reload(bool isAutomatic) {
     trigger_setRemainingShotCount(SHOT_COUNT_MAX);
     sound_playSound(sound_gunReload_e);
-    printf(isAutomatic ? "AUTOMATIC " : "MANUAL ");
-    printf("RELOAD\n");
+    // Optional global debug
+    if (DEBUG_RELOAD) {
+        printf(isAutomatic ? "AUTOMATIC " : "MANUAL ");
+        printf("RELOAD\n");
+    }
 }
 
 // Standard tick function.
@@ -240,14 +247,17 @@ void trigger_tick(void) {
                 // Change button booleans
                 pressConfirmed = true;
                 releaseConfirmed = false;
-                // Run the transmitter
-                transmitter_run();
-                
-                // Sound depends on shots remaining
-                if (shotsRemaining != 0) {
-                    trigger_fire();
-                } else {
-                    trigger_outOfAmmo();
+
+                // Only fire if !invincibilityTimer_running()
+                if (!invincibilityTimer_running()) {
+                    // Run the transmitter
+                    transmitter_run();
+                    // Sound depends on shots remaining
+                    if (shotsRemaining != 0) {
+                        trigger_fire();
+                    } else {
+                        trigger_outOfAmmo();
+                    }
                 }
                 
                 // Reset tick counts
@@ -265,7 +275,7 @@ void trigger_tick(void) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
                 mainTickCount = 0;  // Set variables
             }
-            else if (reload_ticks_manual >= TRIGGER_RELOAD_MANUAL_DELAY_TICKS) {    
+            else if (reload_ticks_manual >= TRIGGER_RELOAD_MANUAL_DELAY_TICKS && !invincibilityTimer_running()) {    
                 // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
@@ -299,21 +309,19 @@ void trigger_tick(void) {
         case INIT_ST:
             break;
         case WAIT_FOR_PRESS_ST:
-            reload_ticks_manual++;
-            if(shotsRemaining == 0){
-                reload_ticks_automatic++;
-            }
+            // Only increment manual reload ticks if !invincibilityTimer_running()
+            if (!invincibilityTimer_running()) reload_ticks_manual++;
+            // Only increment automatic reload ticks if you're out of ammo
+            if(shotsRemaining == 0) reload_ticks_automatic++;
+    
             break;
         case MAYBE_PRESSED_ST:
             // Increment tick counter
             mainTickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
-            reload_ticks_manual++;
-            if(shotsRemaining == 0){
-                reload_ticks_manual++;
-            }
-            break;
+            // Only increment manual reload ticks if !invincibilityTimer_running()
+            if (!invincibilityTimer_running()) reload_ticks_manual++;
         case MAYBE_RELEASED_ST:
             // Increment tick counter
             mainTickCount++;

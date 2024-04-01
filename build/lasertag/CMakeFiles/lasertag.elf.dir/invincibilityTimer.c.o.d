@@ -1,5 +1,5 @@
-lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: \
- /auto/fsd/jcrook12/ecen390/lasertag/trigger.c \
+lasertag/CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.o: \
+ /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.c \
  /usr/include/newlib/stdio.h /usr/include/newlib/_ansi.h \
  /usr/include/newlib/newlib.h /usr/include/newlib/_newlib_version.h \
  /usr/include/newlib/sys/config.h /usr/include/newlib/machine/ieeefp.h \
@@ -18,11 +18,5 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: \
  /usr/include/newlib/machine/types.h /usr/include/newlib/sys/stdio.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
- /auto/fsd/jcrook12/ecen390/lasertag/trigger.h \
- /auto/fsd/jcrook12/ecen390/drivers/buttons.h \
- /auto/fsd/jcrook12/ecen390/include/mio.h \
- /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
- /auto/fsd/jcrook12/ecen390/include/utils.h \
- /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
- /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h \
+ /auto/fsd/jcrook12/ecen390/drivers/intervalTimer.h \
  /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.h

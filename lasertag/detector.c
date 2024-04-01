@@ -22,6 +22,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 
 #define DEBUG_DETECTOR false
+#define DEBUG_DETECTOR_HIT_ARRAY false
 
 
 // Used to normalize the adc inputs to values between -1 and 1
@@ -87,6 +88,17 @@ void detector_init(void) {
    }
 
 };
+
+// Flush the array buffer values to avoid counting hits while in invincibility mode
+void detector_flushDetector() {
+    // Iterate over the arrays and set values to 0
+    for (uint32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+        powerValues[i] = 0.0;
+        powerValues_sorted[i] = 0.0;
+        playerFrequencies_sorted[i] = 0;
+    }
+    buffer_clear();
+}
 
 
 // freqArray is indexed by frequency number. If an element is set to true,
@@ -165,16 +177,16 @@ bool detector_hitCurrentlyDetected() {
     // Iterate through the sorted power values array...
     for (int32_t i = FILTER_FREQUENCY_COUNT - 1; i >= 0; i--) {
         // If the associated frequency is not ignored...
-        if (!ignoredPlayerFrequencies[playerFrequencies_sorted[i]]) {
+        if (!ignoredPlayerFrequencies[playerFrequencies_sorted[i]] && !ignoreAllHits) {
             // If the power value is greater than the base_line...
             if (powerValues_sorted[i] > base_line) {
                 // Register the hit where needed
                 detector_hitDetectedFlag = true;
                 frequencyNumberOfLastHit = playerFrequencies_sorted[i];
-                detectorHitArray[playerFrequencies_sorted[i]] += 1;
+                detectorHitArray[frequencyNumberOfLastHit] += 1;
 
                 // Optional debug statement
-                if (DEBUG_DETECTOR) {
+                if (DEBUG_DETECTOR || DEBUG_DETECTOR_HIT_ARRAY) {
                     printf("detectorHitArray {");
                     // Print out power values for debug
                     for (int32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {

@@ -40,4 +40,5 @@ lasertag/CMakeFiles/lasertag.elf.dir/game.c.o: \
  /auto/fsd/jcrook12/ecen390/lasertag/trigger.h \
  /auto/fsd/jcrook12/ecen390/include/utils.h \
  /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h \
- /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h
+ /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.h

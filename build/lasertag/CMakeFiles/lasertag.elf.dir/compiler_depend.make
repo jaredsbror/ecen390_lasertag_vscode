@@ -166,7 +166,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/game.c.o: ../lasertag/game.c \
   ../lasertag/trigger.h \
   ../include/utils.h \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h \
-  ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h
+  ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h \
+  ../lasertag/invincibilityTimer.h
 
 lasertag/CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o: ../lasertag/hitLedTimer.c \
   /usr/include/newlib/stdio.h \
@@ -208,12 +209,48 @@ lasertag/CMakeFiles/lasertag.elf.dir/hitLedTimer.c.o: ../lasertag/hitLedTimer.c 
   ../drivers/buttons.h \
   ../lasertag/detector.h
 
+lasertag/CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.o: ../lasertag/invincibilityTimer.c \
+  /usr/include/newlib/stdio.h \
+  /usr/include/newlib/_ansi.h \
+  /usr/include/newlib/newlib.h \
+  /usr/include/newlib/_newlib_version.h \
+  /usr/include/newlib/sys/config.h \
+  /usr/include/newlib/machine/ieeefp.h \
+  /usr/include/newlib/sys/features.h \
+  /usr/include/newlib/sys/cdefs.h \
+  /usr/include/newlib/machine/_default_types.h \
+  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h \
+  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdarg.h \
+  /usr/include/newlib/sys/reent.h \
+  /usr/include/newlib/_ansi.h \
+  /usr/include/newlib/sys/_types.h \
+  /usr/include/newlib/machine/_types.h \
+  /usr/include/newlib/sys/lock.h \
+  /usr/include/newlib/sys/types.h \
+  /usr/include/newlib/sys/_stdint.h \
+  /usr/include/newlib/machine/endian.h \
+  /usr/include/newlib/machine/_endian.h \
+  /usr/include/newlib/sys/select.h \
+  /usr/include/newlib/sys/_sigset.h \
+  /usr/include/newlib/sys/_timeval.h \
+  /usr/include/newlib/sys/timespec.h \
+  /usr/include/newlib/sys/_timespec.h \
+  /usr/include/newlib/sys/_pthreadtypes.h \
+  /usr/include/newlib/sys/sched.h \
+  /usr/include/newlib/machine/types.h \
+  /usr/include/newlib/sys/stdio.h \
+  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
+  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+  ../drivers/intervalTimer.h \
+  ../lasertag/invincibilityTimer.h
+
 lasertag/CMakeFiles/lasertag.elf.dir/isr.c.o: ../lasertag/isr.c \
   ../lasertag/hitLedTimer.h \
   /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
   ../lasertag/lockoutTimer.h \
-  ../lasertag/transmitter.h \
+  ../lasertag/invincibilityTimer.h \
   /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+  ../lasertag/transmitter.h \
   ../lasertag/trigger.h \
   ../include/interrupts.h \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
@@ -467,7 +504,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
   ../include/utils.h \
   ../lasertag/transmitter.h \
-  ../lasertag/sound/sound.h
+  ../lasertag/sound/sound.h \
+  ../lasertag/invincibilityTimer.h
 
 
 ../lasertag/transmitter.c:
@@ -489,6 +527,8 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 ../lasertag/main.c:
 
 ../lasertag/game.h:
+
+../lasertag/invincibilityTimer.c:
 
 ../include/leds.h:
 
@@ -606,8 +646,6 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 
 /usr/include/newlib/alloca.h:
 
-../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h:
-
 ../drivers/intervalTimer.h:
 
 ../lasertag/isr.h:
@@ -621,3 +659,7 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: ../lasertag/trigger.c \
 ../lasertag/trigger.h:
 
 ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h:
+
+../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h:
+
+../lasertag/invincibilityTimer.h:

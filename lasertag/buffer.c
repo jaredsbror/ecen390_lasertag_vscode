@@ -39,15 +39,18 @@ volatile static buffer_t buffer;
 /// HELPER FUNCTIONS //
 ///////////////////////
 
+// Return true if the buffer is empty
 static bool buffer_empty() {
     return buffer.elementCount == 0;
 }
 
+// Return true if the buffer is full
 static bool buffer_full() {
     return buffer.elementCount == BUFFER_SIZE;
 }
 
-static void buffer_clear() {
+// Clear the buffer
+void buffer_clear() {
     // Reset all elements of the buffer to zero
     for (uint32_t index = 0; index < BUFFER_SIZE; index++) {
         buffer.data[index] = 0;

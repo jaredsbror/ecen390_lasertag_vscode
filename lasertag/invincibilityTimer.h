@@ -20,7 +20,7 @@ void invincibilityTimer_init();
 void invincibilityTimer_tick();
 
 // Calling this starts the timer.
-void invincibilityTimer_start(uint32_t seconds);
+void invincibilityTimer_start();
 
 // Returns true if the timer is running.
 bool invincibilityTimer_running();

@@ -108,7 +108,7 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "lasertag.elf::@d935bcaf5bd80736138b",
-					"jsonFile" : "target-lasertag.elf-Debug-2b1f6e2854a56d946745.json",
+					"jsonFile" : "target-lasertag.elf-Debug-e3d3d8b6635a7a57f4c0.json",
 					"name" : "lasertag.elf",
 					"projectIndex" : 0
 				},
@@ -122,14 +122,14 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "sound::@7e30312d06299694cadd",
-					"jsonFile" : "target-sound-Debug-74d336cbc91e4733f440.json",
+					"jsonFile" : "target-sound-Debug-743350ecc5884e150b02.json",
 					"name" : "sound",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 3,
 					"id" : "support::@ed5122f37444abd2963e",
-					"jsonFile" : "target-support-Debug-79fe86211c2f8d3f488b.json",
+					"jsonFile" : "target-support-Debug-0deae55a0a639220e588.json",
 					"name" : "support",
 					"projectIndex" : 0
 				}

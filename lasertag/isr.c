@@ -9,6 +9,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #include "hitLedTimer.h"
 #include "lockoutTimer.h"
+#include "invincibilityTimer.h"
 #include "transmitter.h"
 #include "trigger.h"
 #include "interrupts.h"
@@ -28,6 +29,7 @@ void isr_init() {
     // Call state machine initializations
     hitLedTimer_init();
     lockoutTimer_init();
+    invincibilityTimer_tick();
     transmitter_init();
     trigger_init();
     buffer_init();
@@ -40,6 +42,7 @@ void isr_function() {
     // Call tick functions
     hitLedTimer_tick();
     lockoutTimer_tick();
+    invincibilityTimer_tick();
     transmitter_tick();
     trigger_tick();
     sound_tick();

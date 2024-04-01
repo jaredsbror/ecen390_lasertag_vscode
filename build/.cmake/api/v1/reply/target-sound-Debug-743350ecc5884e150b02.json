@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "lasertag/support/libsupport.a"
+			"path" : "lasertag/sound/libsound.a"
 		}
 	],
 	"backtrace" : 1,
@@ -19,7 +19,7 @@
 		],
 		"files" : 
 		[
-			"lasertag/support/CMakeLists.txt",
+			"lasertag/sound/CMakeLists.txt",
 			"platforms/zybo/xil_arm_toolchain/toolchain.cmake",
 			"CMakeLists.txt",
 			"lasertag/CMakeLists.txt"
@@ -108,13 +108,13 @@
 			{
 				"command" : 4,
 				"file" : 3,
-				"line" : 15,
+				"line" : 16,
 				"parent" : 14
 			},
 			{
 				"command" : 4,
 				"file" : 3,
-				"line" : 16,
+				"line" : 17,
 				"parent" : 14
 			}
 		]
@@ -190,17 +190,20 @@
 				2,
 				3,
 				4,
-				5
+				5,
+				6,
+				7,
+				8
 			]
 		}
 	],
-	"id" : "support::@ed5122f37444abd2963e",
-	"name" : "support",
-	"nameOnDisk" : "libsupport.a",
+	"id" : "sound::@7e30312d06299694cadd",
+	"name" : "sound",
+	"nameOnDisk" : "libsound.a",
 	"paths" : 
 	{
-		"build" : "lasertag/support",
-		"source" : "lasertag/support"
+		"build" : "lasertag/sound",
+		"source" : "lasertag/sound"
 	},
 	"sourceGroups" : 
 	[
@@ -213,7 +216,10 @@
 				2,
 				3,
 				4,
-				5
+				5,
+				6,
+				7,
+				8
 			]
 		}
 	],
@@ -222,37 +228,55 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/bufferTest.c",
+			"path" : "lasertag/sound/bcfire01_48k.wav.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/filterTest.c",
+			"path" : "lasertag/sound/gameBoyStartup.wav.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/histogram.c",
+			"path" : "lasertag/sound/gameOver48k.wav.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/queueTest.c",
+			"path" : "lasertag/sound/gunEmpty48k.wav.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/runningModes.c",
+			"path" : "lasertag/sound/ouch48k.wav.c",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "lasertag/support/timer_ps.c",
+			"path" : "lasertag/sound/pacmanDeath.wav.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lasertag/sound/powerUp48k.wav.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lasertag/sound/screamAndDie48k.wav.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lasertag/sound/sound.c",
 			"sourceGroupIndex" : 0
 		}
 	],

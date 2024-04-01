@@ -21,6 +21,9 @@ typedef uint16_t detector_hitCount_t;
 // Assumes the filter module is initialized previously.
 void detector_init(void);
 
+// Flush the array buffer values to avoid counting hits while in invincibility mode
+void detector_flushDetector();
+
 // freqArray is indexed by frequency number. If an element is set to true,
 // the frequency will be ignored. Multiple frequencies can be ignored.
 // Your shot frequency (based on the switches) is a good choice to ignore.

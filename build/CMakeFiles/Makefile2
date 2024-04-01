@@ -138,7 +138,7 @@ CMakeFiles/BOOT.bin.dir/all: lasertag/CMakeFiles/lasertag.elf.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/BOOT.bin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 29
+	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 30
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/BOOT.bin.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 0
 .PHONY : CMakeFiles/BOOT.bin.dir/rule
@@ -164,7 +164,7 @@ CMakeFiles/run.dir/all: lasertag/CMakeFiles/lasertag.elf.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/run.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 29
+	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 30
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/run.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 0
 .PHONY : CMakeFiles/run.dir/rule
@@ -186,12 +186,12 @@ lasertag/CMakeFiles/lasertag.elf.dir/all: lasertag/sound/CMakeFiles/sound.dir/al
 lasertag/CMakeFiles/lasertag.elf.dir/all: lasertag/support/CMakeFiles/support.dir/all
 	$(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/depend
 	$(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target lasertag.elf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13 "Built target lasertag.elf"
 .PHONY : lasertag/CMakeFiles/lasertag.elf.dir/all
 
 # Build rule for subdir invocation for target.
 lasertag/CMakeFiles/lasertag.elf.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 29
+	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 30
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 lasertag/CMakeFiles/lasertag.elf.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /auto/fsd/jcrook12/ecen390/build/CMakeFiles 0
 .PHONY : lasertag/CMakeFiles/lasertag.elf.dir/rule
@@ -212,7 +212,7 @@ lasertag/CMakeFiles/lasertag.elf.dir/clean:
 lasertag/sound/CMakeFiles/sound.dir/all:
 	$(MAKE) $(MAKESILENT) -f lasertag/sound/CMakeFiles/sound.dir/build.make lasertag/sound/CMakeFiles/sound.dir/depend
 	$(MAKE) $(MAKESILENT) -f lasertag/sound/CMakeFiles/sound.dir/build.make lasertag/sound/CMakeFiles/sound.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=13,14,15,16,17,18,19,20,21,22 "Built target sound"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=14,15,16,17,18,19,20,21,22,23 "Built target sound"
 .PHONY : lasertag/sound/CMakeFiles/sound.dir/all
 
 # Build rule for subdir invocation for target.
@@ -238,7 +238,7 @@ lasertag/sound/CMakeFiles/sound.dir/clean:
 lasertag/support/CMakeFiles/support.dir/all:
 	$(MAKE) $(MAKESILENT) -f lasertag/support/CMakeFiles/support.dir/build.make lasertag/support/CMakeFiles/support.dir/depend
 	$(MAKE) $(MAKESILENT) -f lasertag/support/CMakeFiles/support.dir/build.make lasertag/support/CMakeFiles/support.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=23,24,25,26,27,28,29 "Built target support"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/auto/fsd/jcrook12/ecen390/build/CMakeFiles --progress-num=24,25,26,27,28,29,30 "Built target support"
 .PHONY : lasertag/support/CMakeFiles/support.dir/all
 
 # Build rule for subdir invocation for target.

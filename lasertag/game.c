@@ -31,6 +31,7 @@ The code in runningModes.c can be an example for implementing the game here.
 #include "trigger.h"
 #include "utils.h"
 #include "xparameters.h"
+#include "invincibilityTimer.h"
 
 /*
   Game startup sound
@@ -41,50 +42,41 @@ The code in runningModes.c can be an example for implementing the game here.
   One second silence sound?
 
 
+
 */
+#define DEBUG_GAME false
 // Frequencies
-#define GAME_IGNORE_OWN_FREQUENCY 1
+#define GAME_IGNORE_OWN_FREQUENCY
 #define FREQUENCY_6 6
 #define FREQUENCY_9 9
 // Hits and lives
-#define INITIAL_HIT_COUNT 0
-#define INITIAL_LIFE_COUNT 3
-#define HIT_COUNT_PER_LIFE 5
-#define FIRST_LIFE 1
-#define SECOND_LIFE 2
-#define THIRD_LIFE 3
 #define FIRST_LIFE_HIT_COUNT 5
 #define SECOND_LIFE_HIT_COUNT 10
 #define THIRD_LIFE_HIT_COUNT 15
+#define MAX_NUMBER_HITS 15
 // Delays
 #define FINAL_DELAY 3
 #define INVINCIBLE_DELAY_MS 5000
 
 // Hits and lives
 static uint32_t hitCount;
-static uint32_t prevousLifeCount;
-static uint32_t currentLifeCount;
 // Status effects
 static bool isGameOver;
-static bool iAmInvincible;
-// Ignored frequencies backup
-static bool backupIgnoreFrequencies[FILTER_FREQUENCY_COUNT];
 
 static void I_Am_Invincible() {
-  
-  // uint16_t previousHitCount = hitCount;
 
+  // Optional global debug
+  if (DEBUG_GAME) printf("I AM INVINCIBLE\n");
+  invincibilityTimer_start();
   // Delay for 5 seconds and flush adc buffer
   utils_msDelay(INVINCIBLE_DELAY_MS);
   detector_ignoreAllHits(true);
   detector(true);
   detector_ignoreAllHits(false);
-
-  // Copy backup ignored frequencies to a detector array
-  detector_setIgnoredFrequencies(backupIgnoreFrequencies);
-
   // Reset frequencies to ignore
   detector_clearHit();
+  // Optional global debug
+  if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n");
 };
 
 // This game supports two teams, Team-A and Team-B.
@@ -102,41 +94,32 @@ void game_twoTeamTag(void) {
   sound_setVolume(sound_minimumVolume_e);
 
   // Initialize global variables
-  hitCount = INITIAL_HIT_COUNT;
-  prevousLifeCount = INITIAL_LIFE_COUNT;
-  currentLifeCount = INITIAL_LIFE_COUNT;
-  isGameOver = false;
-  iAmInvincible = false;
+  hitCount = 0;
 
   sound_playSound(sound_gameStart_e);
   
   // Init the ignored-frequencies so no frequencies are ignored.
   bool ignoredFrequencies[FILTER_FREQUENCY_COUNT];
-
   // Iterate over the number of ignored frequencies array...
   for (uint32_t frequency = 0; frequency < FILTER_FREQUENCY_COUNT; frequency++) {
     // If a frequency is not frequency 6 or 9, it is ignored.
     ignoredFrequencies[frequency] = ((frequency != FREQUENCY_6) && (frequency != FREQUENCY_9) ? true : false);
   }
-
   #ifdef GAME_IGNORE_OWN_FREQUENCY
     printf("Ignoring own frequency.\n");
     ignoredFrequencies[runningModes_getFrequencySetting()] = true;
   #endif
-
-  // Copy ignored frequencies to a backup array
-  for (uint32_t frequency = 0; frequency < FILTER_FREQUENCY_COUNT; frequency++) {
-    backupIgnoreFrequencies[frequency] = ignoredFrequencies[frequency];
-  }
-
   detector_setIgnoredFrequencies(ignoredFrequencies); // Set ignored frequencies
 
-  printf("Ignored Frequencies(");
-  // Iterate over the ignored frequencies
-  for (uint32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
-    printf("%d,", ignoredFrequencies[i]);
+  // Optional global debug
+  if (DEBUG_GAME) {
+    printf("Ignored Frequencies(");
+    // Iterate over the ignored frequencies
+    for (uint32_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
+      printf("%d,", ignoredFrequencies[i]);
+    }
+    printf(")\n");
   }
-  printf(")\n");
 
   // Configure timers and interrupts
   trigger_enable(); // Makes the state machine responsive to the trigger.
@@ -152,60 +135,52 @@ void game_twoTeamTag(void) {
 
   // Main game loop
   while ((!(buttons_read() & BUTTONS_BTN3_MASK)) &&
-         hitCount < MAX_HIT_COUNT) { // Run until you detect BTN3 pressed.
+         hitCount < MAX_NUMBER_HITS) { // Run until you detect BTN3 pressed.
 
     transmitter_setFrequencyNumber(runningModes_getFrequencySetting());    // Read the switches and switch
                                                 // frequency as required.
     intervalTimer_start(MAIN_CUMULATIVE_TIMER); // Measure run-time when you are
                                                 // doing something.
     // Run filters, compute power, run hit-detection.
-    detector(INTERRUPTS_CURRENTLY_ENABLED); // Interrupts are currently enabled.
+    if (!invincibilityTimer_running()) detector(INTERRUPTS_CURRENTLY_ENABLED); // Interrupts are currently enabled.
     
     // If a hit has been detected...
-    if (detector_hitPreviouslyDetected()) {           // Hit detected
+    if (detector_hitPreviouslyDetected() && !invincibilityTimer_running()) {           // Hit detected
       hitCount++;                           // increment the hit count.
-      detector_clearHit();                  // Clear the hit.
       detector_hitCount_t
           hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
       detector_getHitCounts(hitCounts);       // Get the current hit counts.
       histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
-
-      // Modify lifecount and determine if game is over
-      // if (hitCount == FIRST_LIFE_HIT_COUNT)
-      //   currentLifeCount = FIRST_LIFE;
-      // else if (hitCount == SECOND_LIFE_HIT_COUNT)
-      //   currentLifeCount = SECOND_LIFE;
-      // else if (hitCount == THIRD_LIFE_HIT_COUNT)
-      //   currentLifeCount = THIRD_LIFE;
-      // else
-      //   currentLifeCount = currentLifeCount;
-      currentLifeCount = INITIAL_LIFE_COUNT - (hitCount / HIT_COUNT_PER_LIFE);
+      detector_clearHit();                  // Clear the hit.
 
       // Check to see if a life has been lost...
-      if (currentLifeCount < prevousLifeCount) {
+      if ((hitCount == FIRST_LIFE_HIT_COUNT) || (hitCount == SECOND_LIFE_HIT_COUNT)) {
+        // Optional global debug
+        if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
         // Trigger I AM INVINCIBLE for 5 seconds
         sound_playSound(sound_loseLife_e);
-        printf("You lost a life!\n");
+        // Optional global debug
+        if (DEBUG_GAME) printf("Lost a life\n");
         I_Am_Invincible();
-        printf("I AM INVINCIBLE\n");
+      } else if (hitCount == THIRD_LIFE_HIT_COUNT) {
+        sound_playSound(sound_gameOver_e);
+        break;
       } else {  // Player was simply hit
+        // Optional global debug
+        if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
         sound_playSound(sound_hit_e);
-        printf("You were shot!\n");
+        // Optional global debug
+        if (DEBUG_GAME) printf("Got hit\n");
       }
-
-      prevousLifeCount = currentLifeCount;  // Equalize the life counts
     }
     intervalTimer_stop(
         MAIN_CUMULATIVE_TIMER); // All done with actual processing.
   }
 
-  sound_playSound(sound_gameOver_e);
   sound_waitForSoundToFinish();
 
   sound_playSound(sound_returnToBase_e);
   sound_waitForSoundToFinish();
-
-
 
   // Terminate the program completely
   interrupts_disableArmInts(); // Done with loop, disable the interrupts.

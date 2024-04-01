@@ -5,6 +5,7 @@
         "utils.h": "c",
         "xparameters.h": "c",
         "histogram.h": "c",
-        "sound.h": "c"
+        "sound.h": "c",
+        "invincibilitytimer.h": "c"
     }
 }

@@ -55,6 +55,11 @@
   "file": "/auto/fsd/jcrook12/ecen390/lasertag/game.c"
 },
 {
+  "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag",
+  "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.c",
+  "file": "/auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.c"
+},
+{
   "directory": "/auto/fsd/jcrook12/ecen390/build/lasertag/sound",
   "command": "arm-none-eabi-gcc -DZYBO_BOARD=1 -I/auto/fsd/jcrook12/ecen390/. -I/auto/fsd/jcrook12/ecen390/include -I/auto/fsd/jcrook12/ecen390/drivers -I/auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include -I/auto/fsd/jcrook12/ecen390/lasertag/. -I/auto/fsd/jcrook12/ecen390/lasertag/sound -I/auto/fsd/jcrook12/ecen390/lasertag/support -g -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard -O2 -o CMakeFiles/sound.dir/bcfire01_48k.wav.c.o -c /auto/fsd/jcrook12/ecen390/lasertag/sound/bcfire01_48k.wav.c",
   "file": "/auto/fsd/jcrook12/ecen390/lasertag/sound/bcfire01_48k.wav.c"

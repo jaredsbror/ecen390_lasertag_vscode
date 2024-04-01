@@ -250,6 +250,30 @@ hitLedTimer.c.s:
 	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/hitLedTimer.c.s
 .PHONY : hitLedTimer.c.s
 
+invincibilityTimer.o: invincibilityTimer.c.o
+.PHONY : invincibilityTimer.o
+
+# target to build an object file
+invincibilityTimer.c.o:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.o
+.PHONY : invincibilityTimer.c.o
+
+invincibilityTimer.i: invincibilityTimer.c.i
+.PHONY : invincibilityTimer.i
+
+# target to preprocess a source file
+invincibilityTimer.c.i:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.i
+.PHONY : invincibilityTimer.c.i
+
+invincibilityTimer.s: invincibilityTimer.c.s
+.PHONY : invincibilityTimer.s
+
+# target to generate assembly for a file
+invincibilityTimer.c.s:
+	cd /auto/fsd/jcrook12/ecen390/build && $(MAKE) $(MAKESILENT) -f lasertag/CMakeFiles/lasertag.elf.dir/build.make lasertag/CMakeFiles/lasertag.elf.dir/invincibilityTimer.c.s
+.PHONY : invincibilityTimer.c.s
+
 isr.o: isr.c.o
 .PHONY : isr.o
 
@@ -418,6 +442,9 @@ help:
 	@echo "... hitLedTimer.o"
 	@echo "... hitLedTimer.i"
 	@echo "... hitLedTimer.s"
+	@echo "... invincibilityTimer.o"
+	@echo "... invincibilityTimer.i"
+	@echo "... invincibilityTimer.s"
 	@echo "... isr.o"
 	@echo "... isr.i"
 	@echo "... isr.s"

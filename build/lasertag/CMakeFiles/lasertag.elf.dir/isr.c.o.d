@@ -3,8 +3,9 @@ lasertag/CMakeFiles/lasertag.elf.dir/isr.c.o: \
  /auto/fsd/jcrook12/ecen390/lasertag/hitLedTimer.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
  /auto/fsd/jcrook12/ecen390/lasertag/lockoutTimer.h \
- /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.h \
  /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+ /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
  /auto/fsd/jcrook12/ecen390/lasertag/trigger.h \
  /auto/fsd/jcrook12/ecen390/include/interrupts.h \
  /auto/fsd/jcrook12/ecen390/platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \

@@ -22,6 +22,9 @@ typedef uint32_t buffer_data_t;
 // Initialize the buffer to empty.
 void buffer_init(void);
 
+// Clear the buffer
+void buffer_clear();
+
 // Add a value to the buffer. Overwrite the oldest value if full.
 void buffer_pushover(buffer_data_t value);
 
