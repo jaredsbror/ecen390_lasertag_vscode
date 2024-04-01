@@ -73,7 +73,7 @@ static void I_Am_Invincible() {
   detector_ignoreAllHits(true);
   detector(true);
   detector_ignoreAllHits(false);
-  // Reset frequencies to ignore
+  // Reset frequencies to ignore 
   detector_clearHit();
   // Optional global debug
   if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n");
