@@ -140,8 +140,7 @@ void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
 // Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
 // Gun input is ignored if the gun-input is high when the init() function is invoked.
 bool triggerPressed() {
-	return ((!ignoreGunInput && (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == 1)) || 
-                (buttons_read() & BUTTONS_BTN0_MASK));
+	return (!ignoreGunInput && (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == 1));
 }
 
 // Init trigger data-structures.
@@ -165,7 +164,7 @@ void trigger_init() {
         ignoreGunInput = true;
     }
 
-    // Set variables to default
+    // Set variables to default 
     mainTickCount = 0;
     reloadTickCount = 0;
     enable = false;
@@ -219,8 +218,11 @@ void trigger_tick(void) {
             break;
 
         case WAIT_FOR_PRESS_ST:
+            // If invincibility timer is running, stay in default state
+            if (invincibilityTimer_running()) {
+                currentState = WAIT_FOR_PRESS_ST;
             // If a press is detected and machine is enabled, transition to MAYBE_PRESSED_ST
-            if (enable && triggerPressed()) {
+            } else if (enable && triggerPressed()) {
                 currentState = MAYBE_PRESSED_ST;    // Transition
                 // Set variables
                 mainTickCount = 0;
@@ -236,28 +238,27 @@ void trigger_tick(void) {
             break;
 
         case MAYBE_PRESSED_ST:
+            // If invincibility timer is running, reset to default state
+            if (invincibilityTimer_running()) {
+                currentState = WAIT_FOR_PRESS_ST;
             // If BTN0 is not pressed, return to WAIT_FOR_PRESS_ST
-            if (!triggerPressed()) {
+            } else if (!triggerPressed()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // Else if mainTickCount is greater than 50 ms, transition to WAIT_FOR_RELEASE_ST
             } else if (mainTickCount >= TRIGGER_DEBOUNCE_PRESS_DELAY) {
-
                 currentState = WAIT_FOR_RELEASE_ST; // Transition to next state
                 
                 // Change button booleans
                 pressConfirmed = true;
                 releaseConfirmed = false;
-
-                // Only fire if !invincibilityTimer_running()
-                if (!invincibilityTimer_running()) {
+                
+                // Sound depends on shots remaining
+                if (shotsRemaining != 0) {
                     // Run the transmitter
                     transmitter_run();
-                    // Sound depends on shots remaining
-                    if (shotsRemaining != 0) {
-                        trigger_fire();
-                    } else {
-                        trigger_outOfAmmo();
-                    }
+                    trigger_fire();
+                } else {
+                    trigger_outOfAmmo();
                 }
                 
                 // Reset tick counts
@@ -270,12 +271,15 @@ void trigger_tick(void) {
             break;
 
         case WAIT_FOR_RELEASE_ST:
+            // If invincibility timer is running, reset to default state
+            if (invincibilityTimer_running()) {
+                currentState = WAIT_FOR_PRESS_ST;
             // If BTN0 is not pressed, continue to MAYBE_RELEASED_ST
-            if (!triggerPressed()) {
+            } else if (!triggerPressed()) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
                 mainTickCount = 0;  // Set variables
             }
-            else if (reload_ticks_manual >= TRIGGER_RELOAD_MANUAL_DELAY_TICKS && !invincibilityTimer_running()) {    
+            else if (reload_ticks_manual >= TRIGGER_RELOAD_MANUAL_DELAY_TICKS) {    
                 // Reset reload tick counts
                 reload_ticks_automatic = 0;
                 reload_ticks_manual = 0;
@@ -284,8 +288,11 @@ void trigger_tick(void) {
             break;
 
         case MAYBE_RELEASED_ST:
+            // If invincibility timer is running, reset to default state
+            if (invincibilityTimer_running()) {
+                currentState = WAIT_FOR_PRESS_ST;
             // If BTN0 is pressed, return to WAIT_FOR_RELEASE_ST
-            if (triggerPressed()) {
+            } else if (triggerPressed()) {
                 currentState = WAIT_FOR_RELEASE_ST;
             // Else If mainTickCount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
             } else if (mainTickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
@@ -310,21 +317,22 @@ void trigger_tick(void) {
             break;
         case WAIT_FOR_PRESS_ST:
             // Only increment manual reload ticks if !invincibilityTimer_running()
-            if (!invincibilityTimer_running()) reload_ticks_manual++;
-            // Only increment automatic reload ticks if you're out of ammo
-            if(shotsRemaining == 0) reload_ticks_automatic++;
-    
+            if (!invincibilityTimer_running()) {
+                reload_ticks_manual++;
+                // Only increment automatic reload ticks if you're out of ammo
+                if(shotsRemaining == 0) reload_ticks_automatic++;
+            }
             break;
         case MAYBE_PRESSED_ST:
             // Increment tick counter
-            mainTickCount++;
+            if (!invincibilityTimer_running()) mainTickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
             // Only increment manual reload ticks if !invincibilityTimer_running()
             if (!invincibilityTimer_running()) reload_ticks_manual++;
         case MAYBE_RELEASED_ST:
             // Increment tick counter
-            mainTickCount++;
+            if (!invincibilityTimer_running()) mainTickCount++;
             break;
         default:
             // Error message here

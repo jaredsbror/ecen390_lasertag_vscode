@@ -46,7 +46,6 @@ void isr_function() {
     transmitter_tick();
     trigger_tick();
     sound_tick();
-
     // Get adc data
     buffer_pushover(interrupts_getAdcData());
 };

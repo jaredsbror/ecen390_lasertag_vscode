@@ -50,6 +50,7 @@ The code in runningModes.c can be an example for implementing the game here.
 #define FREQUENCY_6 6
 #define FREQUENCY_9 9
 // Hits and lives
+#define INITIAL_HIT_COUNT 0
 #define FIRST_LIFE_HIT_COUNT 5
 #define SECOND_LIFE_HIT_COUNT 10
 #define THIRD_LIFE_HIT_COUNT 15
@@ -63,6 +64,8 @@ static uint32_t hitCount;
 // Status effects
 static bool isGameOver;
 
+// Function to start a 5 second player invincibility delay which
+// stops the player from shooting or getting hit
 static void I_Am_Invincible() {
 
   // Optional global debug
@@ -73,7 +76,7 @@ static void I_Am_Invincible() {
   detector_ignoreAllHits(true);
   detector(true);
   detector_ignoreAllHits(false);
-  // Reset frequencies to ignore 
+  // Reset frequencies to ignore
   detector_clearHit();
   // Optional global debug
   if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n");
@@ -91,12 +94,7 @@ static void I_Am_Invincible() {
 void game_twoTeamTag(void) {
 
   runningModes_initAll();
-  sound_setVolume(sound_minimumVolume_e);
-
-  // Initialize global variables
-  hitCount = 0;
-
-  sound_playSound(sound_gameStart_e);
+  sound_setVolume(sound_mediumHighVolume_e);
   
   // Init the ignored-frequencies so no frequencies are ignored.
   bool ignoredFrequencies[FILTER_FREQUENCY_COUNT];
@@ -121,6 +119,10 @@ void game_twoTeamTag(void) {
     printf(")\n");
   }
 
+  // Initialize global variables
+  hitCount = INITIAL_HIT_COUNT;
+  sound_playSound(sound_gameStart_e);
+
   // Configure timers and interrupts
   trigger_enable(); // Makes the state machine responsive to the trigger.
   interrupts_enableTimerGlobalInts(); // Allow timer interrupts.
@@ -132,6 +134,8 @@ void game_twoTeamTag(void) {
   interrupts_enableArmInts(); // ARM will now see interrupts after this.
   lockoutTimer_start(); // Ignore erroneous hits at startup (when all power
                         // values are essentially 0).
+
+  sound_waitForSoundToFinish();
 
   // Main game loop
   while ((!(buttons_read() & BUTTONS_BTN3_MASK)) &&
@@ -163,7 +167,6 @@ void game_twoTeamTag(void) {
         if (DEBUG_GAME) printf("Lost a life\n");
         I_Am_Invincible();
       } else if (hitCount == THIRD_LIFE_HIT_COUNT) {
-        sound_playSound(sound_gameOver_e);
         break;
       } else {  // Player was simply hit
         // Optional global debug
@@ -177,10 +180,16 @@ void game_twoTeamTag(void) {
         MAIN_CUMULATIVE_TIMER); // All done with actual processing.
   }
 
-  sound_waitForSoundToFinish();
+  trigger_disable();  // Disable the trigger
 
-  sound_playSound(sound_returnToBase_e);
-  sound_waitForSoundToFinish();
+  sound_playSound(sound_gameOver_e);  // Play game over sound
+  sound_waitForSoundToFinish();       // Wait for game over sound to finish
+
+  // Keep playing the return to base sound until the player presses button 0 (BTN0)
+  while (!(buttons_read() & BUTTONS_BTN0_MASK)) {
+    sound_playSound(sound_returnToBase_e);
+    sound_waitForSoundToFinish();
+  }
 
   // Terminate the program completely
   interrupts_disableArmInts(); // Done with loop, disable the interrupts.
