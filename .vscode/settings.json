@@ -6,6 +6,8 @@
         "xparameters.h": "c",
         "histogram.h": "c",
         "sound.h": "c",
-        "invincibilitytimer.h": "c"
+        "invincibilitytimer.h": "c",
+        "stdint.h": "c",
+        "laser1.wav.h": "c"
     }
 }

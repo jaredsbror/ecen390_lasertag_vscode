@@ -105,7 +105,6 @@ void detector_flushDetector() {
 // the frequency will be ignored. Multiple frequencies can be ignored.
 // Your shot frequency (based on the switches) is a good choice to ignore.
 void detector_setIgnoredFrequencies(bool freqArray[]) {
-    
    // Set ignored player frequencies
    for (uint16_t i = 0; i < FILTER_FREQUENCY_COUNT; i++) {
        ignoredPlayerFrequencies[i] = freqArray[i];

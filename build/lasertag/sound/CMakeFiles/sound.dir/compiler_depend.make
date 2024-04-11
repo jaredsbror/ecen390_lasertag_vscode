@@ -66,6 +66,7 @@ lasertag/sound/CMakeFiles/sound.dir/sound.c.o: ../lasertag/sound/sound.c \
   ../lasertag/sound/pacmanDeath.wav.h \
   ../lasertag/sound/powerUp48k.wav.h \
   ../lasertag/sound/screamAndDie48k.wav.h \
+  ../lasertag/sound/laserwav.h \
   ../lasertag/support/timer_ps.h \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xil_types.h \
   ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters.h \
@@ -135,6 +136,10 @@ lasertag/sound/CMakeFiles/sound.dir/sound.c.o: ../lasertag/sound/sound.c \
 ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/bspconfig.h:
 
 /usr/include/newlib/sys/config.h:
+
+/usr/include/newlib/ctype.h:
+
+/usr/include/newlib/stdio.h:
 
 /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h:
 
@@ -212,13 +217,11 @@ lasertag/sound/CMakeFiles/sound.dir/sound.c.o: ../lasertag/sound/sound.c \
 
 ../lasertag/sound/powerUp48k.wav.h:
 
+../lasertag/sound/laserwav.h:
+
 ../lasertag/sound/ouch48k.wav.h:
 
 ../platforms/zybo/xil_arm_toolchain/bsp/ps7_cortexa9_0/include/xparameters_ps.h:
-
-/usr/include/newlib/stdio.h:
-
-/usr/include/newlib/ctype.h:
 
 /usr/include/newlib/machine/ieeefp.h:
 

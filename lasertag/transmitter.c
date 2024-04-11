@@ -161,7 +161,7 @@ void transmitter_tick() {
 
         case INACTIVE_ST:
             // If trigger is pulled or continuous mode is active, turn on pulsing for 200 ms
-            if(triggerPulled || continuousMode){
+            if (triggerPulled || continuousMode){
                     currentState = ON_ST;
                     // Reset variables for next 200ms pulse
                     on = true;
@@ -175,7 +175,7 @@ void transmitter_tick() {
                     transmitter_set_jf1_to_one();
                     
                 
-            } else{
+            } else {
                 // Set on to false
                 on = false;
             }

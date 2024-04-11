@@ -22,7 +22,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // Uncomment for debug prints
 #define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
 #define DEBUG_TRIGGER false  // If true, debug messages enabled
-#define DEBUG_RELOAD false
+#define DEBUG_RELOAD true
 
 // The trigger state machine debounces both the press and release of gun
 // trigger. Ultimately, it will activate the transmitter when a debounced press
@@ -75,7 +75,7 @@ static enum trigger_st_st currentState;
 volatile static trigger_shotsRemaining_t shotsRemaining;    // Remaining shots
 volatile static uint32_t mainTickCount; // Main tick count (used for half second trigger delay until next shot)
 volatile static uint32_t reloadTickCount; // Reload tick count (used to measure three second reload delay)
-volatile static uint32_t chargedShotTickCount;
+volatile static uint32_t chargedShotTickCount;  // Tick count waiting for charged shot
 // Booleans
 volatile static bool enable;    // Enable trigger SM
 volatile static bool pressConfirmed;    // Confirm a press
@@ -129,7 +129,6 @@ void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
     shotsRemaining = count;
 };
 
-
 // Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
 // Gun input is ignored if the gun-input is high when the init() function is invoked.
 bool triggerPressed() {
@@ -165,7 +164,6 @@ static void trigger_outOfAmmo(void){
 
 // Play default firing sound
 static void trigger_fire_default(void){
-    printf("DEFAULT\n");
     transmitter_run();
     shotsRemaining--;
     sound_playSound(sound_gunFire_e);
@@ -175,24 +173,19 @@ static void trigger_fire_default(void){
 
 // Play charged firing sound
 static void trigger_fire_charged(void){
-    printf("CHARGED\n");
     // Temporarily change frequency to shoot and restore the old frequency
     uint32_t currentFrequency = transmitter_getFrequencyNumber();
-    printf("TransFreq 1: %d\n", transmitter_getFrequencyNumber());
     transmitter_setFrequencyNumber(CHARGED_SHOT_FREQUENCY);
-    printf("TransFreq 2: %d\n", transmitter_getFrequencyNumber());
     transmitter_run();
-    printf("TransFreq 3: %d\n", transmitter_getFrequencyNumber());
-    // Wait for the transmitter to finish before setting the frequency back
+    // Wait for the transmitter to stop running
     while (transmitter_running());
-    transmitter_setFrequencyNumber(currentFrequency);
-
-    printf("TransFreq 4: %d\n", transmitter_getFrequencyNumber());
-
+    // NOTE that for some reason setting the frequency back here makes it NOT work...
+    // So just don't set it back.
+    // Play sound and decrement shots
     shotsRemaining--;
-    sound_playSound(sound_gunFire_e);
+    sound_playSound(sound_gunClick_e);
     // Optional global debug
-    if (DEBUG_RELOAD) printf("FIRE\n");
+    if (DEBUG_RELOAD) printf("BOOM\n");
 }
 
 // Reload gun with max bullets in clip
@@ -211,6 +204,9 @@ void trigger_tick(void) {
 
      // Perform state update
     switch(currentState) {
+
+        static bool charged = false;
+
         case INIT_ST:
             // Default transition
             reloadTickCount = 0;
@@ -283,15 +279,14 @@ void trigger_tick(void) {
                 // Reset reload tick counts
                 reloadTickCount = 0;
                 chargedShotTickCount = 0;
-                trigger_fire_charged();
+                charged = true; //charges gun
+                
                 
             }
             break;
 
         case MAYBE_RELEASED_ST:
             // If invincibility timer is running, reset to default state
-        
-
             if (invincibilityTimer_running()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // If BTN0 is pressed, return to WAIT_FOR_RELEASE_ST
@@ -300,6 +295,10 @@ void trigger_tick(void) {
             // Else If mainTickCount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
             } else if (mainTickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
                 
+                if(charged){
+                    trigger_fire_charged(); //shoots gun
+                    charged = false; //discharge gun
+                }
 
                 currentState = WAIT_FOR_PRESS_ST;
                 mainTickCount = 0;
