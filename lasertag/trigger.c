@@ -24,6 +24,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define DEBUG_TRIGGER false  // If true, debug messages enabled
 #define DEBUG_RELOAD true
 
+
 // The trigger state machine debounces both the press and release of gun
 // trigger. Ultimately, it will activate the transmitter when a debounced press
 // is detected.
@@ -164,15 +165,19 @@ static void trigger_outOfAmmo(void){
 
 // Play default firing sound
 static void trigger_fire_default(void){
-    transmitter_run();
+    
     shotsRemaining--;
     sound_playSound(sound_gunFire_e);
+    transmitter_run();
     // Optional global debug
     if (DEBUG_RELOAD) printf("FIRE\n");
 }
 
 // Play charged firing sound
 static void trigger_fire_charged(void){
+    // Play sound and decrement shots
+    shotsRemaining--;
+    sound_playSound(sound_gunFire_e);
     // Temporarily change frequency to shoot and restore the old frequency
     uint32_t currentFrequency = transmitter_getFrequencyNumber();
     transmitter_setFrequencyNumber(CHARGED_SHOT_FREQUENCY);
@@ -180,10 +185,7 @@ static void trigger_fire_charged(void){
     // Wait for the transmitter to stop running
     while (transmitter_running());
     // NOTE that for some reason setting the frequency back here makes it NOT work...
-    // So just don't set it back.
-    // Play sound and decrement shots
-    shotsRemaining--;
-    sound_playSound(sound_gunClick_e);
+    // So just don't set it back...
     // Optional global debug
     if (DEBUG_RELOAD) printf("BOOM\n");
 }

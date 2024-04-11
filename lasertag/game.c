@@ -48,12 +48,8 @@ The code in runningModes.c can be an example for implementing the game here.
 // Frequencies
 #define GAME_IGNORE_OWN_FREQUENCY 0
 // Team A
-#define TEAM_A_DEFAULT_SHOOT_FREQUENCY 6
-#define TEAM_A_CHARGED_SHOOT_FREQUENCY 7
 #define TEAM_A_IGNORED_FREQUENCIES {1,1,1,1,1,1,1,1,0,0}
 // Team B
-#define TEAM_B_DEFAULT_SHOOT_FREQUENCY 9
-#define TEAM_B_CHARGED_SHOOT_FREQUENCY 8
 #define TEAM_B_IGNORED_FREQUENCIES {1,1,1,1,1,1,0,0,1,1}
 // Base
 // Hits and lives
@@ -74,24 +70,88 @@ static bool isGameOver;
 bool teamAIgnoredFrequencies[] = TEAM_A_IGNORED_FREQUENCIES;
 bool teamBIgnoredFrequencies[] = TEAM_B_IGNORED_FREQUENCIES;
 
+typedef enum  {
+  TEAM_A,
+  TEAM_B,
+  BASE
+} playerType;
+playerType currentPlayerType;
+
 
 // Function to start a 5 second player invincibility delay which
 // stops the player from shooting or getting hit
 static void I_Am_Invincible() {
 
-  // Optional global debug
-  if (DEBUG_GAME) printf("I AM INVINCIBLE\n");
+  if (DEBUG_GAME) printf("I AM INVINCIBLE\n"); // Optional global debug
   invincibilityTimer_start();
   // Delay for 5 seconds and flush adc buffer
   utils_msDelay(INVINCIBLE_DELAY_MS);
   detector_ignoreAllHits(true);
   detector(true);
   detector_ignoreAllHits(false);
-  // Reset frequencies to ignore
   detector_clearHit();
-  // Optional global debug
-  if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n");
+  if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n"); // Optional global debug
 };
+
+// Process the hit counts and return true if the game should be terminated
+bool game_registerChargedShot() {
+  hitCount += FIRST_LIFE_HIT_COUNT;
+  detector_hitCount_t
+  hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
+  detector_getHitCounts(hitCounts);       // Get the current hit counts.
+  histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
+  detector_clearHit();                  // Clear the hit.
+
+  // Check to see if a life has been lost...
+  if ((hitCount >= FIRST_LIFE_HIT_COUNT) && (hitCount < THIRD_LIFE_HIT_COUNT)) {
+    // Optional global debug
+    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+    // Trigger I AM INVINCIBLE for 5 seconds
+    sound_playSound(sound_loseLife_e);
+    // Optional global debug
+    if (DEBUG_GAME) printf("Lost a life\n");
+    I_Am_Invincible();
+  } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
+    return true;
+  } else {  // Player was simply hit
+    // Optional global debug
+    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+    sound_playSound(sound_hit_e);
+    // Optional global debug
+    if (DEBUG_GAME) printf("Got hit\n");
+  }
+  return false;
+}
+
+// Process the hit counts and return true if the game should be terminated
+bool game_registerDefaultShot() {
+  hitCount++;
+  detector_hitCount_t
+  hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
+  detector_getHitCounts(hitCounts);       // Get the current hit counts.
+  histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
+  detector_clearHit();                  // Clear the hit.
+
+  // Check to see if a life has been lost...
+  if ((hitCount == FIRST_LIFE_HIT_COUNT) || (hitCount == SECOND_LIFE_HIT_COUNT)) {
+    // Optional global debug
+    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+    // Trigger I AM INVINCIBLE for 5 seconds
+    sound_playSound(sound_loseLife_e);
+    // Optional global debug
+    if (DEBUG_GAME) printf("Lost a life\n");
+    I_Am_Invincible();
+  } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
+    return true;
+  } else {  // Player was simply hit
+    // Optional global debug
+    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+    sound_playSound(sound_hit_e);
+    // Optional global debug
+    if (DEBUG_GAME) printf("Got hit\n");
+  }
+  return false;
+}
 
 // This game supports two teams, Team-A and Team-B.
 // Each team operates on its own configurable frequency.
@@ -116,11 +176,15 @@ void game_twoTeamTag(void) {
     for (uint32_t index = 0; index < FILTER_FREQUENCY_COUNT; index++) {
       ignoredFrequencies[index] = teamBIgnoredFrequencies[index];
     }
+    currentPlayerType = TEAM_B;
+    if (DEBUG_GAME) printf("TEAM B\n"); // Optional debug
   } else {
     // Iterate over the teamAIgnoredFrequencies
     for (uint32_t index = 0; index < FILTER_FREQUENCY_COUNT; index++) {
       ignoredFrequencies[index] = teamAIgnoredFrequencies[index];
     }
+    currentPlayerType = TEAM_A;
+    if (DEBUG_GAME) printf("TEAM A\n"); // Optional debug
   }
   detector_setIgnoredFrequencies(ignoredFrequencies); // Set ignored frequencies
 
@@ -165,30 +229,27 @@ void game_twoTeamTag(void) {
     
     // If a hit has been detected...
     if (detector_hitPreviouslyDetected() && !invincibilityTimer_running()) {           // Hit detected
-      hitCount++;                           // increment the hit count.
-      detector_hitCount_t
-          hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
-      detector_getHitCounts(hitCounts);       // Get the current hit counts.
-      histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
-      detector_clearHit();                  // Clear the hit.
-
-      // Check to see if a life has been lost...
-      if ((hitCount == FIRST_LIFE_HIT_COUNT) || (hitCount == SECOND_LIFE_HIT_COUNT)) {
-        // Optional global debug
-        if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-        // Trigger I AM INVINCIBLE for 5 seconds
-        sound_playSound(sound_loseLife_e);
-        // Optional global debug
-        if (DEBUG_GAME) printf("Lost a life\n");
-        I_Am_Invincible();
-      } else if (hitCount == THIRD_LIFE_HIT_COUNT) {
-        break;
-      } else {  // Player was simply hit
-        // Optional global debug
-        if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-        sound_playSound(sound_hit_e);
-        // Optional global debug
-        if (DEBUG_GAME) printf("Got hit\n");
+      // Depending on which player type the player is and the frequency of the hit, increment the hit count
+      if (currentPlayerType == TEAM_A) {
+        // If the last frequency hit was Team B charged frequency, take more damage
+        if (detector_getFrequencyNumberOfLastHit() == TEAM_B_CHARGED_SHOOT_FREQUENCY) {
+          // Process the hit counts in a separate function and return true if the game should be terminated
+          if (game_registerChargedShot()) break;
+        } else {
+          // Process the hit counts in a separate function and return true if the game should be terminated
+          if (game_registerDefaultShot()) break;
+        }
+      } else if (currentPlayerType = TEAM_B) {
+        // If the last frequency hit was Team A charged frequency, take more damage
+        if (detector_getFrequencyNumberOfLastHit() == TEAM_A_CHARGED_SHOOT_FREQUENCY)
+          // Process the hit counts in a separate function and return true if the game should be terminated
+          if (game_registerChargedShot()) break;
+        else
+          // Process the hit counts in a separate function and return true if the game should be terminated
+          if (game_registerDefaultShot()) break;
+      } else {
+        // Process the hit counts in a separate function and return true if the game should be terminated
+        if (game_registerDefaultShot()) break;
       }
     }
     intervalTimer_stop(
