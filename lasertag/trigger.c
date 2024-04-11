@@ -182,7 +182,9 @@ static void trigger_fire_charged(void){
     transmitter_setFrequencyNumber(CHARGED_SHOT_FREQUENCY);
     printf("TransFreq 2: %d\n", transmitter_getFrequencyNumber());
     transmitter_run();
-    // printf("TransFreq 3: %d\n", transmitter_getFrequencyNumber());
+    printf("TransFreq 3: %d\n", transmitter_getFrequencyNumber());
+    // Wait for the transmitter to finish before setting the frequency back
+    while (transmitter_running());
     transmitter_setFrequencyNumber(currentFrequency);
 
     printf("TransFreq 4: %d\n", transmitter_getFrequencyNumber());
@@ -277,16 +279,19 @@ void trigger_tick(void) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
                 mainTickCount = 0;  // Set variables
             }
-            else if (chargedShotTickCount >= TRIGGER_CHARGED_SHOT_DELAY_TICKS) {    
+            else if (shotsRemaining != 0 && chargedShotTickCount >= TRIGGER_CHARGED_SHOT_DELAY_TICKS) {    
                 // Reset reload tick counts
                 reloadTickCount = 0;
                 chargedShotTickCount = 0;
-                trigger_reload();
+                trigger_fire_charged();
+                
             }
             break;
 
         case MAYBE_RELEASED_ST:
             // If invincibility timer is running, reset to default state
+        
+
             if (invincibilityTimer_running()) {
                 currentState = WAIT_FOR_PRESS_ST;
             // If BTN0 is pressed, return to WAIT_FOR_RELEASE_ST
@@ -294,6 +299,8 @@ void trigger_tick(void) {
                 currentState = WAIT_FOR_RELEASE_ST;
             // Else If mainTickCount is greater than 50 ms, transition to WAIT_FOR_PRESS_ST
             } else if (mainTickCount >= TRIGGER_DEBOUNCE_RELEASE_DELAY) {
+                
+
                 currentState = WAIT_FOR_PRESS_ST;
                 mainTickCount = 0;
                 pressConfirmed = false;
