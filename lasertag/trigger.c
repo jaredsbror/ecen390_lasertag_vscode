@@ -81,8 +81,13 @@ volatile static uint32_t chargedShotTickCount;  // Tick count waiting for charge
 volatile static bool enable;    // Enable trigger SM
 volatile static bool pressConfirmed;    // Confirm a press
 volatile static bool releaseConfirmed;  // Confirm a release
+// Teams
+volatile static bool isTeamA;
 
-
+// Set isTeamA
+void trigger_setIsTeamA(bool teamA) {
+    isTeamA = teamA;
+}
 
 // This is a debug state print routine. It will print the names of the states each
 // time tick() is called. It only prints states if they are different than the
@@ -154,6 +159,7 @@ void trigger_init() {
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
+    isTeamA = true;
 };
 
 // Play empty magazine sound
@@ -178,9 +184,15 @@ static void trigger_fire_charged(void){
     // Play sound and decrement shots
     shotsRemaining--;
     sound_playSound(sound_gunFire_e);
+
     // Temporarily change frequency to shoot and restore the old frequency
     uint32_t currentFrequency = transmitter_getFrequencyNumber();
-    transmitter_setFrequencyNumber(CHARGED_SHOT_FREQUENCY);
+    // Set frequency depending on team
+    if (isTeamA)
+        transmitter_setFrequencyNumber(TEAM_A_CHARGED_SHOOT_FREQUENCY);
+    else 
+        transmitter_setFrequencyNumber(TEAM_B_CHARGED_SHOOT_FREQUENCY);
+
     transmitter_run();
     // Wait for the transmitter to stop running
     while (transmitter_running());

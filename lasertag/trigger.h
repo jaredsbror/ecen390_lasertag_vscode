@@ -21,10 +21,8 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS 300000
 #define TRIGGER_CHARGED_SHOT_DELAY_TICKS 300000
 
-
 #define TEAM_A_DEFAULT_SHOOT_FREQUENCY 6
 #define TEAM_A_CHARGED_SHOOT_FREQUENCY 7
-#define TEAM_A_IGNORED_FREQUENCIES {1,1,1,1,1,1,1,1,0,0}
 // Team B
 #define TEAM_B_DEFAULT_SHOOT_FREQUENCY 9
 #define TEAM_B_CHARGED_SHOOT_FREQUENCY 8
@@ -36,6 +34,9 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // is detected.
 
 typedef uint16_t trigger_shotsRemaining_t;
+
+// Set isTeamA
+void trigger_setIsTeamA(bool teamA);
 
 // Init trigger data-structures.
 // Initializes the mio subsystem.

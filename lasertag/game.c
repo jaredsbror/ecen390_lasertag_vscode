@@ -177,6 +177,7 @@ void game_twoTeamTag(void) {
       ignoredFrequencies[index] = teamBIgnoredFrequencies[index];
     }
     currentPlayerType = TEAM_B;
+    trigger_setIsTeamA(false);
     if (DEBUG_GAME) printf("TEAM B\n"); // Optional debug
   } else {
     // Iterate over the teamAIgnoredFrequencies
@@ -184,6 +185,7 @@ void game_twoTeamTag(void) {
       ignoredFrequencies[index] = teamAIgnoredFrequencies[index];
     }
     currentPlayerType = TEAM_A;
+    trigger_setIsTeamA(true);
     if (DEBUG_GAME) printf("TEAM A\n"); // Optional debug
   }
   detector_setIgnoredFrequencies(ignoredFrequencies); // Set ignored frequencies
