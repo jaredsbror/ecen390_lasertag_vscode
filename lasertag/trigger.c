@@ -17,6 +17,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "transmitter.h"
 #include "sound.h"
 #include "invincibilityTimer.h"
+#include "interrupts.h"
 
 // Uncomment for debug prints
 #define DEBUG_SINGLE_LETTER_PRINTOUTS false  // Single letter debug messages
@@ -48,12 +49,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 // trigger_tick() must be invoked in isr_function() and nowhere else. Pass-off points will be 
 // subtracted if trigger_tick() is invoked anywhere else.
 
-#define TRIGGER_GUN_TRIGGER_MIO_PIN 10     // JF2 (pg. 25 of ZYBO reference manual).
 
-// Debouncing values
-#define TRIGGER_DEBOUNCE_PRESS_DELAY 50 // ticks, 50 ms
-#define TRIGGER_DEBOUNCE_RELEASE_DELAY 50 // ticks, 50 ms
-#define TRIGGER_DEBOUNCE_MILLISECOND_DELAY 1    // Slow down the loop
 
 // All printed messages for states are provided here.
 #define INIT_ST_MSG "init state\n"
@@ -63,9 +59,6 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define MAYBE_RELEASED_ST_MSG "maybe released state\n"
 #define TRIGGER_UNKNOWN_ST_MSG "ERROR: Unknown state in Trigger\n"
 
-#define SHOT_COUNT_MAX 10
-#define TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS 300000
-#define TRIGGER_CHARGED_SHOT_DELAY_TICKS 300000
 
 // State machine states
 enum trigger_st_st {
@@ -87,7 +80,6 @@ volatile static uint32_t chargedShotTickCount;
 volatile static bool enable;    // Enable trigger SM
 volatile static bool pressConfirmed;    // Confirm a press
 volatile static bool releaseConfirmed;  // Confirm a release
-volatile static bool ignoreGunInput;    // Ignore gun trigger input
 
 
 
@@ -141,7 +133,7 @@ void trigger_setRemainingShotCount(trigger_shotsRemaining_t count) {
 // Trigger can be activated by either btn0 or the external gun that is attached to TRIGGER_GUN_TRIGGER_MIO_PIN
 // Gun input is ignored if the gun-input is high when the init() function is invoked.
 bool triggerPressed() {
-	return (!ignoreGunInput && (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == 1));
+	return (mio_readPin(TRIGGER_GUN_TRIGGER_MIO_PIN) == 1);
 }
 
 // Init trigger data-structures.
@@ -150,26 +142,15 @@ bool triggerPressed() {
 // (see discussion in lab web pages).
 void trigger_init() {
     currentState = INIT_ST;
-
     // Init hardware
     buttons_init();
-
     // Load the gun
     trigger_setRemainingShotCount(SHOT_COUNT_MAX);
-
-    // Determine whether to ignore gun trigger input or just use BTN0
-    ignoreGunInput = false;
     mio_setPinAsInput(TRIGGER_GUN_TRIGGER_MIO_PIN);
-    // If the trigger is pressed when trigger_init() is called, assume that the gun is not connected and ignore it.
-    if (triggerPressed()) {
-        ignoreGunInput = true;
-    }
-
     // Set variables to default 
     mainTickCount = 0;
     reloadTickCount = 0;
     chargedShotTickCount = 0;
-    
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
@@ -184,6 +165,7 @@ static void trigger_outOfAmmo(void){
 
 // Play default firing sound
 static void trigger_fire_default(void){
+    printf("DEFAULT\n");
     transmitter_run();
     shotsRemaining--;
     sound_playSound(sound_gunFire_e);
@@ -193,6 +175,18 @@ static void trigger_fire_default(void){
 
 // Play charged firing sound
 static void trigger_fire_charged(void){
+    printf("CHARGED\n");
+    // Temporarily change frequency to shoot and restore the old frequency
+    uint32_t currentFrequency = transmitter_getFrequencyNumber();
+    printf("TransFreq 1: %d\n", transmitter_getFrequencyNumber());
+    transmitter_setFrequencyNumber(CHARGED_SHOT_FREQUENCY);
+    printf("TransFreq 2: %d\n", transmitter_getFrequencyNumber());
+    transmitter_run();
+    // printf("TransFreq 3: %d\n", transmitter_getFrequencyNumber());
+    transmitter_setFrequencyNumber(currentFrequency);
+
+    printf("TransFreq 4: %d\n", transmitter_getFrequencyNumber());
+
     shotsRemaining--;
     sound_playSound(sound_gunFire_e);
     // Optional global debug
@@ -320,7 +314,7 @@ void trigger_tick(void) {
         case INIT_ST:
             break;
         case WAIT_FOR_PRESS_ST:
-            // Only increment manual reload ticks if !invincibilityTimer_running()
+            // Only increment charged shot ticks if !invincibilityTimer_running()
             if (!invincibilityTimer_running()) {
                 chargedShotTickCount++;
                 // Only increment automatic reload ticks if you're out of ammo
@@ -332,7 +326,7 @@ void trigger_tick(void) {
             if (!invincibilityTimer_running()) mainTickCount++;
             break;
         case WAIT_FOR_RELEASE_ST:
-            // Only increment manual reload ticks if !invincibilityTimer_running()
+            // Only increment charged shot ticks if !invincibilityTimer_running()
             if (!invincibilityTimer_running()) chargedShotTickCount++;
         case MAYBE_RELEASED_ST:
             // Increment tick counter

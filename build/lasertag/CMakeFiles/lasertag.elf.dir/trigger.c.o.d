@@ -25,4 +25,5 @@ lasertag/CMakeFiles/lasertag.elf.dir/trigger.c.o: \
  /auto/fsd/jcrook12/ecen390/include/utils.h \
  /auto/fsd/jcrook12/ecen390/lasertag/transmitter.h \
  /auto/fsd/jcrook12/ecen390/lasertag/sound/sound.h \
- /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.h
+ /auto/fsd/jcrook12/ecen390/lasertag/invincibilityTimer.h \
+ /auto/fsd/jcrook12/ecen390/include/interrupts.h

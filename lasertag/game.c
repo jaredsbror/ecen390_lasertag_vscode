@@ -101,7 +101,7 @@ void game_twoTeamTag(void) {
   // Iterate over the number of ignored frequencies array...
   for (uint32_t frequency = 0; frequency < FILTER_FREQUENCY_COUNT; frequency++) {
     // If a frequency is not frequency 6 or 9, it is ignored.
-    ignoredFrequencies[frequency] = ((frequency != FREQUENCY_6) && (frequency != FREQUENCY_9) ? true : false);
+    ignoredFrequencies[frequency] = ((frequency != FREQUENCY_6) && (frequency != FREQUENCY_9) && (frequency != CHARGED_SHOT_FREQUENCY) ? true : false);
   }
   #ifdef GAME_IGNORE_OWN_FREQUENCY
     printf("Ignoring own frequency.\n");

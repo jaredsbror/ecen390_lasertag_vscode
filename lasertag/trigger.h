@@ -10,6 +10,19 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #ifndef TRIGGER_H_
 #define TRIGGER_H_
 
+#define TRIGGER_GUN_TRIGGER_MIO_PIN 10     // JF2 (pg. 25 of ZYBO reference manual).
+
+// Debouncing values
+#define TRIGGER_DEBOUNCE_PRESS_DELAY 50 // ticks, 50 ms
+#define TRIGGER_DEBOUNCE_RELEASE_DELAY 50 // ticks, 50 ms
+#define TRIGGER_DEBOUNCE_MILLISECOND_DELAY 1    // Slow down the loop
+
+#define SHOT_COUNT_MAX 10
+#define TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS 300000
+#define TRIGGER_CHARGED_SHOT_DELAY_TICKS 300000
+
+#define CHARGED_SHOT_FREQUENCY 7
+
 #include <stdint.h>
 
 // The trigger state machine debounces both the press and release of gun
