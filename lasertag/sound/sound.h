@@ -33,7 +33,8 @@ typedef enum {
   sound_loseLife_e,        // Sound made when you are hit enough times.
   sound_gameOver_e,        // Sound made when the game is over.
   sound_returnToBase_e,    // Remind the user that the game is over.
-  sound_oneSecondSilence_e // One second of silence.
+  sound_oneSecondSilence_e, // One second of silence.
+  sound_customLaser_e
 } sound_sounds_t;
 
 // Just provide 4 volume settings.

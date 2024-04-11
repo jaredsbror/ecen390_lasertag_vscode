@@ -18,6 +18,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #include "pacmanDeath.wav.h"
 #include "powerUp48k.wav.h"
 #include "screamAndDie48k.wav.h"
+// #include "laserwav.h"
 #include "timer_ps.h"
 #include "xiicps.h"
 #include "xil_printf.h"
@@ -283,6 +284,10 @@ void sound_setSound(sound_sounds_t sound) {
     sound_array = soundOfSilence;
     sound_sampleCount = ONE_SECOND_OF_SOUND_ARRAY_SIZE;
     break;
+  case sound_customLaser_e:
+    // sound_array = laserwav;
+    // sound_sampleCount = LASER1_WAV_NUMBER_OF_SAMPLES;
+
   default:
     printf("sound_setSound(): bogus sound value(%d)\n", sound);
   }

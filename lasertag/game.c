@@ -44,11 +44,18 @@ The code in runningModes.c can be an example for implementing the game here.
 
 
 */
-#define DEBUG_GAME false
+#define DEBUG_GAME true
 // Frequencies
-#define GAME_IGNORE_OWN_FREQUENCY
-#define FREQUENCY_6 6
-#define FREQUENCY_9 9
+#define GAME_IGNORE_OWN_FREQUENCY 0
+// Team A
+#define TEAM_A_DEFAULT_SHOOT_FREQUENCY 6
+#define TEAM_A_CHARGED_SHOOT_FREQUENCY 7
+#define TEAM_A_IGNORED_FREQUENCIES {1,1,1,1,1,1,1,1,0,0}
+// Team B
+#define TEAM_B_DEFAULT_SHOOT_FREQUENCY 9
+#define TEAM_B_CHARGED_SHOOT_FREQUENCY 8
+#define TEAM_B_IGNORED_FREQUENCIES {1,1,1,1,1,1,0,0,1,1}
+// Base
 // Hits and lives
 #define INITIAL_HIT_COUNT 0
 #define FIRST_LIFE_HIT_COUNT 5
@@ -63,6 +70,10 @@ The code in runningModes.c can be an example for implementing the game here.
 static uint32_t hitCount;
 // Status effects
 static bool isGameOver;
+// Ignored frequency arrays
+bool teamAIgnoredFrequencies[] = TEAM_A_IGNORED_FREQUENCIES;
+bool teamBIgnoredFrequencies[] = TEAM_B_IGNORED_FREQUENCIES;
+
 
 // Function to start a 5 second player invincibility delay which
 // stops the player from shooting or getting hit
@@ -96,17 +107,21 @@ void game_twoTeamTag(void) {
   runningModes_initAll();
   sound_setVolume(sound_mediumHighVolume_e);
   
-  // Init the ignored-frequencies so no frequencies are ignored.
+  // Init the ignored-frequencies to all zeroes
   bool ignoredFrequencies[FILTER_FREQUENCY_COUNT];
-  // Iterate over the number of ignored frequencies array...
-  for (uint32_t frequency = 0; frequency < FILTER_FREQUENCY_COUNT; frequency++) {
-    // If a frequency is not frequency 6 or 9, it is ignored.
-    ignoredFrequencies[frequency] = ((frequency != FREQUENCY_6) && (frequency != FREQUENCY_9) && (frequency != CHARGED_SHOT_FREQUENCY) ? true : false);
+  // Set the ignored frequencies now to either those of team A or team B
+  // Non-zero switches = team B, zero switches = team A
+  if (switches_read() > 0) {
+    // Iterate over the teamBIgnoredFrequencies
+    for (uint32_t index = 0; index < FILTER_FREQUENCY_COUNT; index++) {
+      ignoredFrequencies[index] = teamBIgnoredFrequencies[index];
+    }
+  } else {
+    // Iterate over the teamAIgnoredFrequencies
+    for (uint32_t index = 0; index < FILTER_FREQUENCY_COUNT; index++) {
+      ignoredFrequencies[index] = teamAIgnoredFrequencies[index];
+    }
   }
-  #ifdef GAME_IGNORE_OWN_FREQUENCY
-    printf("Ignoring own frequency.\n");
-    ignoredFrequencies[runningModes_getFrequencySetting()] = true;
-  #endif
   detector_setIgnoredFrequencies(ignoredFrequencies); // Set ignored frequencies
 
   // Optional global debug

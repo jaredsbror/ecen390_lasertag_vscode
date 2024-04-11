@@ -22,7 +22,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 #define TRIGGER_CHARGED_SHOT_DELAY_TICKS 300000
 
 #define CHARGED_SHOT_FREQUENCY 0
-
+ 
 #include <stdint.h>
 
 // The trigger state machine debounces both the press and release of gun
