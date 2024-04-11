@@ -65,7 +65,7 @@ For questions, contact Brad Hutchings or Jeff Goeders, https://ece.byu.edu/
 
 #define SHOT_COUNT_MAX 10
 #define TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS 300000
-#define TRIGGER_RELOAD_MANUAL_DELAY_TICKS 300000
+#define TRIGGER_CHARGED_SHOT_DELAY_TICKS 300000
 
 // State machine states
 enum trigger_st_st {
@@ -82,6 +82,7 @@ static enum trigger_st_st currentState;
 volatile static trigger_shotsRemaining_t shotsRemaining;    // Remaining shots
 volatile static uint32_t mainTickCount; // Main tick count (used for half second trigger delay until next shot)
 volatile static uint32_t reloadTickCount; // Reload tick count (used to measure three second reload delay)
+volatile static uint32_t chargedShotTickCount;
 // Booleans
 volatile static bool enable;    // Enable trigger SM
 volatile static bool pressConfirmed;    // Confirm a press
@@ -167,43 +168,47 @@ void trigger_init() {
     // Set variables to default 
     mainTickCount = 0;
     reloadTickCount = 0;
+    chargedShotTickCount = 0;
+    
     enable = false;
     pressConfirmed = false;
     releaseConfirmed = false;
-
-    
 };
 
+// Play empty magazine sound
 static void trigger_outOfAmmo(void){
     sound_playSound(sound_gunClick_e);
     // Optional global debug
     if (DEBUG_RELOAD) printf("EMPTY\n");
 }
 
-static void trigger_fire(void){
+// Play default firing sound
+static void trigger_fire_default(void){
+    transmitter_run();
     shotsRemaining--;
-    // If sound is not busy, play the sound
-    // if (!sound_isBusy()) 
+    sound_playSound(sound_gunFire_e);
+    // Optional global debug
+    if (DEBUG_RELOAD) printf("FIRE\n");
+}
+
+// Play charged firing sound
+static void trigger_fire_charged(void){
+    shotsRemaining--;
     sound_playSound(sound_gunFire_e);
     // Optional global debug
     if (DEBUG_RELOAD) printf("FIRE\n");
 }
 
 // Reload gun with max bullets in clip
-static void trigger_reload(bool isAutomatic) {
+static void trigger_reload(void) {
     trigger_setRemainingShotCount(SHOT_COUNT_MAX);
     sound_playSound(sound_gunReload_e);
     // Optional global debug
-    if (DEBUG_RELOAD) {
-        printf(isAutomatic ? "AUTOMATIC " : "MANUAL ");
-        printf("RELOAD\n");
-    }
+    if (DEBUG_RELOAD) printf("AUTOMATIC RELOAD\n");
 }
 
 // Standard tick function.
 void trigger_tick(void) {
-    static uint32_t reload_ticks_automatic;
-    static uint32_t reload_ticks_manual;
 
     // Optional debug messages
     if (DEBUG_TRIGGER) debugStatePrint();
@@ -212,8 +217,8 @@ void trigger_tick(void) {
     switch(currentState) {
         case INIT_ST:
             // Default transition
-            reload_ticks_automatic = 0;
-            reload_ticks_manual = 0;
+            reloadTickCount = 0;
+            chargedShotTickCount = 0;
             currentState = WAIT_FOR_PRESS_ST;
             break;
 
@@ -229,11 +234,11 @@ void trigger_tick(void) {
                 pressConfirmed = false;
                 releaseConfirmed = false;
             }
-            else if ((reload_ticks_automatic >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) && (shotsRemaining == 0)) {
+            else if ((reloadTickCount >= TRIGGER_RELOAD_AUTOMATIC_DELAY_TICKS) && (shotsRemaining == 0)) {
                 // Reset reload tick counts
-                reload_ticks_automatic = 0;
-                reload_ticks_manual = 0;
-                trigger_reload(true);
+                reloadTickCount = 0;
+                chargedShotTickCount = 0;
+                trigger_reload();
             }
             break;
 
@@ -255,16 +260,15 @@ void trigger_tick(void) {
                 // Sound depends on shots remaining
                 if (shotsRemaining != 0) {
                     // Run the transmitter
-                    transmitter_run();
-                    trigger_fire();
+                    trigger_fire_default();
                 } else {
                     trigger_outOfAmmo();
                 }
                 
                 // Reset tick counts
                 mainTickCount = 0;
-                reload_ticks_automatic = 0;
-                reload_ticks_manual = 0;
+                reloadTickCount = 0;
+                chargedShotTickCount = 0;
                 // Print out char
                 if (DEBUG_SINGLE_LETTER_PRINTOUTS) printf("D\n");
             }
@@ -279,11 +283,11 @@ void trigger_tick(void) {
                 currentState = MAYBE_RELEASED_ST;   // Transition
                 mainTickCount = 0;  // Set variables
             }
-            else if (reload_ticks_manual >= TRIGGER_RELOAD_MANUAL_DELAY_TICKS) {    
+            else if (chargedShotTickCount >= TRIGGER_CHARGED_SHOT_DELAY_TICKS) {    
                 // Reset reload tick counts
-                reload_ticks_automatic = 0;
-                reload_ticks_manual = 0;
-                trigger_reload(false);
+                reloadTickCount = 0;
+                chargedShotTickCount = 0;
+                trigger_reload();
             }
             break;
 
@@ -318,9 +322,9 @@ void trigger_tick(void) {
         case WAIT_FOR_PRESS_ST:
             // Only increment manual reload ticks if !invincibilityTimer_running()
             if (!invincibilityTimer_running()) {
-                reload_ticks_manual++;
+                chargedShotTickCount++;
                 // Only increment automatic reload ticks if you're out of ammo
-                if(shotsRemaining == 0) reload_ticks_automatic++;
+                if (shotsRemaining == 0) reloadTickCount++;
             }
             break;
         case MAYBE_PRESSED_ST:
@@ -329,7 +333,7 @@ void trigger_tick(void) {
             break;
         case WAIT_FOR_RELEASE_ST:
             // Only increment manual reload ticks if !invincibilityTimer_running()
-            if (!invincibilityTimer_running()) reload_ticks_manual++;
+            if (!invincibilityTimer_running()) chargedShotTickCount++;
         case MAYBE_RELEASED_ST:
             // Increment tick counter
             if (!invincibilityTimer_running()) mainTickCount++;
