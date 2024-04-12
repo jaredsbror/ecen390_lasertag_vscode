@@ -192,7 +192,7 @@ static void trigger_fire_charged(void){
         transmitter_setFrequencyNumber(TEAM_A_CHARGED_SHOOT_FREQUENCY);
     else 
         transmitter_setFrequencyNumber(TEAM_B_CHARGED_SHOOT_FREQUENCY);
-
+    utils_msDelay(1);
     transmitter_run();
     // Wait for the transmitter to stop running
     while (transmitter_running());

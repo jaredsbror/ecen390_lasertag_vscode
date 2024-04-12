@@ -48,9 +48,11 @@ The code in runningModes.c can be an example for implementing the game here.
 // Frequencies
 #define GAME_IGNORE_OWN_FREQUENCY 0
 // Team A
-#define TEAM_A_IGNORED_FREQUENCIES {1,1,1,1,1,1,1,1,0,0}
+#define TEAM_A_IGNORED_FREQUENCIES {0,0,0,0,0,0,0,0,0,0}
+// #define TEAM_A_IGNORED_FREQUENCIES {1,1,1,1,1,1,1,1,0,0}
 // Team B
-#define TEAM_B_IGNORED_FREQUENCIES {1,1,1,1,1,1,0,0,1,1}
+#define TEAM_B_IGNORED_FREQUENCIES {0,0,0,0,0,0,0,0,0,0}
+// #define TEAM_B_IGNORED_FREQUENCIES {1,1,1,1,1,1,0,0,1,1}
 // Base
 // Hits and lives
 #define INITIAL_HIT_COUNT 0
@@ -190,6 +192,7 @@ void game_twoTeamTag(void) {
             if (DEBUG_GAME) printf("Lost a life\n");
             I_Am_Invincible();
           } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
+            if (DEBUG_GAME) printf("Game over after %d hits\n", hitCount);
             break;
           } else {  // Player was simply hit
             // Optional global debug
