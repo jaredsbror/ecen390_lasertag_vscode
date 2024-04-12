@@ -93,66 +93,6 @@ static void I_Am_Invincible() {
   if (DEBUG_GAME) printf("PLEASE DON'T SHOOT ME!\n"); // Optional global debug
 };
 
-// Process the hit counts and return true if the game should be terminated
-bool game_registerChargedShot() {
-  hitCount += FIRST_LIFE_HIT_COUNT;
-  detector_hitCount_t
-  hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
-  detector_getHitCounts(hitCounts);       // Get the current hit counts.
-  histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
-  detector_clearHit();                  // Clear the hit.
-
-  // Check to see if a life has been lost...
-  if ((hitCount >= FIRST_LIFE_HIT_COUNT) && (hitCount < THIRD_LIFE_HIT_COUNT)) {
-    // Optional global debug
-    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-    // Trigger I AM INVINCIBLE for 5 seconds
-    sound_playSound(sound_loseLife_e);
-    // Optional global debug
-    if (DEBUG_GAME) printf("Lost a life\n");
-    I_Am_Invincible();
-  } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
-    return true;
-  } else {  // Player was simply hit
-    // Optional global debug
-    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-    sound_playSound(sound_hit_e);
-    // Optional global debug
-    if (DEBUG_GAME) printf("Got hit\n");
-  }
-  return false;
-}
-
-// Process the hit counts and return true if the game should be terminated
-bool game_registerDefaultShot() {
-  hitCount++;
-  detector_hitCount_t
-  hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
-  detector_getHitCounts(hitCounts);       // Get the current hit counts.
-  histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
-  detector_clearHit();                  // Clear the hit.
-
-  // Check to see if a life has been lost...
-  if ((hitCount == FIRST_LIFE_HIT_COUNT) || (hitCount == SECOND_LIFE_HIT_COUNT)) {
-    // Optional global debug
-    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-    // Trigger I AM INVINCIBLE for 5 seconds
-    sound_playSound(sound_loseLife_e);
-    // Optional global debug
-    if (DEBUG_GAME) printf("Lost a life\n");
-    I_Am_Invincible();
-  } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
-    return true;
-  } else {  // Player was simply hit
-    // Optional global debug
-    if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
-    sound_playSound(sound_hit_e);
-    // Optional global debug
-    if (DEBUG_GAME) printf("Got hit\n");
-  }
-  return false;
-}
-
 // This game supports two teams, Team-A and Team-B.
 // Each team operates on its own configurable frequency.
 // Each player has a fixed set of lives and once they
@@ -165,7 +105,7 @@ bool game_registerDefaultShot() {
 void game_twoTeamTag(void) {
 
   runningModes_initAll();
-  sound_setVolume(sound_mediumHighVolume_e);
+  sound_setVolume(sound_mediumLowVolume_e);
   
   // Init the ignored-frequencies to all zeroes
   bool ignoredFrequencies[FILTER_FREQUENCY_COUNT];
@@ -231,27 +171,59 @@ void game_twoTeamTag(void) {
     
     // If a hit has been detected...
     if (detector_hitPreviouslyDetected() && !invincibilityTimer_running()) {           // Hit detected
-      // Depending on which player type the player is and the frequency of the hit, increment the hit count
-      if (currentPlayerType == TEAM_A) {
-        // If the last frequency hit was Team B charged frequency, take more damage
-        if (detector_getFrequencyNumberOfLastHit() == TEAM_B_CHARGED_SHOOT_FREQUENCY) {
-          // Process the hit counts in a separate function and return true if the game should be terminated
-          if (game_registerChargedShot()) break;
-        } else {
-          // Process the hit counts in a separate function and return true if the game should be terminated
-          if (game_registerDefaultShot()) break;
-        }
-      } else if (currentPlayerType = TEAM_B) {
-        // If the last frequency hit was Team A charged frequency, take more damage
-        if (detector_getFrequencyNumberOfLastHit() == TEAM_A_CHARGED_SHOOT_FREQUENCY)
-          // Process the hit counts in a separate function and return true if the game should be terminated
-          if (game_registerChargedShot()) break;
-        else
-          // Process the hit counts in a separate function and return true if the game should be terminated
-          if (game_registerDefaultShot()) break;
-      } else {
-        // Process the hit counts in a separate function and return true if the game should be terminated
-        if (game_registerDefaultShot()) break;
+      // If the last frequency hit was Team B charged frequency or team A charged frequency, take more damage
+      if ((detector_getFrequencyNumberOfLastHit() == TEAM_B_CHARGED_SHOOT_FREQUENCY) || (detector_getFrequencyNumberOfLastHit() == TEAM_A_CHARGED_SHOOT_FREQUENCY)) {
+          hitCount += FIRST_LIFE_HIT_COUNT;
+          detector_hitCount_t
+          hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
+          detector_getHitCounts(hitCounts);       // Get the current hit counts.
+          histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
+          detector_clearHit();                  // Clear the hit.
+
+          // Check to see if a life has been lost...
+          if ((hitCount >= FIRST_LIFE_HIT_COUNT) && (hitCount < THIRD_LIFE_HIT_COUNT)) {
+            // Optional global debug
+            if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+            // Trigger I AM INVINCIBLE for 5 seconds
+            sound_playSound(sound_loseLife_e);
+            // Optional global debug
+            if (DEBUG_GAME) printf("Lost a life\n");
+            I_Am_Invincible();
+          } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
+            break;
+          } else {  // Player was simply hit
+            // Optional global debug
+            if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+            sound_playSound(sound_hit_e);
+            // Optional global debug
+            if (DEBUG_GAME) printf("Got hit\n");
+          }
+      } else {  // Otherwise process the single hit
+          hitCount++;
+          detector_hitCount_t
+          hitCounts[DETECTOR_HIT_ARRAY_SIZE]; // Store the hit-counts here.
+          detector_getHitCounts(hitCounts);       // Get the current hit counts.
+          histogram_plotUserHits(hitCounts);      // Plot the hit counts on the TFT.
+          detector_clearHit();                  // Clear the hit.
+
+          // Check to see if a life has been lost...
+          if ((hitCount == FIRST_LIFE_HIT_COUNT) || (hitCount == SECOND_LIFE_HIT_COUNT)) {
+            // Optional global debug
+            if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+            // Trigger I AM INVINCIBLE for 5 seconds
+            sound_playSound(sound_loseLife_e);
+            // Optional global debug
+            if (DEBUG_GAME) printf("Lost a life\n");
+            I_Am_Invincible();
+          } else if (hitCount >= THIRD_LIFE_HIT_COUNT) {
+            break;
+          } else {  // Player was simply hit
+            // Optional global debug
+            if (DEBUG_GAME) printf("HitCount: %d\n", hitCount);
+            sound_playSound(sound_hit_e);
+            // Optional global debug
+            if (DEBUG_GAME) printf("Got hit\n");
+          }
       }
     }
     intervalTimer_stop(
