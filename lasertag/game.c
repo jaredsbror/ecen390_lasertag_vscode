@@ -107,7 +107,7 @@ static void I_Am_Invincible() {
 void game_twoTeamTag(void) {
 
   runningModes_initAll();
-  sound_setVolume(sound_mediumLowVolume_e);
+  sound_setVolume(sound_maximumVolume_e);
   
   // Init the ignored-frequencies to all zeroes
   bool ignoredFrequencies[FILTER_FREQUENCY_COUNT];
